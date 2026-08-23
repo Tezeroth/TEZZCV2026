@@ -243,7 +243,7 @@ header {
   white-space: nowrap;
 }
 .k-outline {
-  color: transparent;
+  color: var(--ink);   /* opaque fill = page background (theme-aware) so the gimbal never shows through the glyphs */
   -webkit-text-stroke: 1.5px var(--paper);
 }
 .k-acid { color: var(--acid); }

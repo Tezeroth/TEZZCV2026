@@ -145,7 +145,9 @@
   }
 
   /* ---------- the three gimbal rings ---------- */
-  var outerRing = makeRing(3.4, 'dim', 0.35, 3, 0);
+  var OUTER_RADIUS = 3.4;
+  var RING_RISE = 0.4 * 2 * OUTER_RADIUS;   /* gimbal sits higher in the hero: up 40% of its own height */
+  var outerRing = makeRing(OUTER_RADIUS, 'dim', 0.35, 3, 0);
   var midRing = makeRing(2.6, 'acid', 0.5, 3, Math.PI / 3);
   var innerRing = makeRing(1.9, 'signal', 0.45, 3, Math.PI / 6);
 
@@ -234,15 +236,19 @@
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    var scale, x, y;
     if (w < 640) {
       dim = 0.62;                                       /* keep hero type readable */
-      assembly.scale.setScalar(0.55);
-      assembly.position.set(0.6, 0.5, 0);
+      scale = 0.55;
+      x = 0.6; y = 0.5;
     } else {
       dim = 1;
-      assembly.scale.setScalar(Math.min(1, w / 1000));
-      assembly.position.set(Math.min(2.6, 1.2 + (w - 640) / 300), 0.35, 0);
+      scale = Math.min(1, w / 1000);
+      x = Math.min(2.6, 1.2 + (w - 640) / 300);
+      y = 0.35;
     }
+    assembly.scale.setScalar(scale);
+    assembly.position.set(x, y + RING_RISE * scale, 0); /* up 40% of the rendered gimbal height */
   }
   if (window.ResizeObserver) {
     new ResizeObserver(layout).observe(container);
