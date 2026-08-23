@@ -870,8 +870,8 @@ footer .mono a:hover { color: var(--acid); }
         padding — separators .x are the only spacing.
      4. The track is rebuilt from clones of ONE chunk; the HTML
         source chunk must stay canonical.
-     5. Keep the IntersectionObserver, resize re-tween, hover pause
-        and document.fonts.ready gating.
+     5. Keep the IntersectionObserver, width-guarded resize re-tween,
+       mouse-only hover pause (pointerType check) and document.fonts.ready gating.
      6. Keep cv.html's ticker identical.
      ============================================================ */
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -879,6 +879,8 @@ footer .mono a:hover { color: var(--acid); }
   document.querySelectorAll('.marquee').forEach(function (marquee) {
     const track = marquee.querySelector('.marquee-track');
     let tween = null;
+    let marqueeVisible = false;  // mirrors IntersectionObserver state so rebuilt tweens respect it
+    let lastW = 0;               // chunk-width cache — skip rebuilds when nothing actually changed
 
     /* Build the track from 6 identical clones of ONE chunk.
        This is the GSAP-docs "clone the item" technique — the tween only
@@ -909,19 +911,23 @@ footer .mono a:hover { color: var(--acid); }
     function buildTween() {
       if (reduceMotion) return;
       if (typeof gsap === 'undefined') return; // fail-safe: never break page JS if gsap.min.js is missing
-      if (tween) tween.kill();
       const w = oneChunkWidth();
-      if (!w) return;
+      if (!w) return;                                  // never kill the live tween unless a rebuild will actually happen
+      if (tween && Math.abs(w - lastW) < 0.5) return;  // chunk width unchanged → skip rebuild (mobile URL-bar resize spam)
+      lastW = w;
+      if (tween) tween.kill();
       tween = gsap.to(track, {
         x: -w,                  // travel exactly ONE chunk width per loop
         duration: w / 112,      // constant 112px/s regardless of chunk width
         ease: 'none',
-        repeat: -1
+        repeat: -1,
+        paused: !marqueeVisible // never force-play an off-screen marquee after a rebuild
       });
     }
 
     const marqueeIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
+        marqueeVisible = en.isIntersecting;
         if (en.isIntersecting) {
           if (!tween) buildTween();
           if (tween) tween.play();
@@ -932,8 +938,12 @@ footer .mono a:hover { color: var(--acid); }
     }, { threshold: 0 });
     marqueeIO.observe(marquee);
 
-    marquee.addEventListener('mouseenter', function () { if (tween) tween.pause(); });
-    marquee.addEventListener('mouseleave', function () { if (tween) tween.play(); });
+    // Pause-on-hover ONLY for real mouse pointers. Touch screens synthesise
+    // mouse events from taps and scrolls, so a thumb brushing the strip would
+    // pause it and the mouseleave never arrives — that was the "randomly stops
+    // on mobile" bug. pointerenter/leave expose the real pointer type.
+    marquee.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && tween) tween.pause(); });
+    marquee.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && tween) tween.play(); });
     window.addEventListener('resize', buildTween);
 
     if (document.fonts && document.fonts.ready) {
