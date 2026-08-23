@@ -398,6 +398,19 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   padding-left: 22px;
   margin-bottom: 26px;
 }
+/* about section "further details" — accordion trigger styled like the availability pill */
+.about-details { margin-bottom: 26px; }
+.about-details .acc-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--acid);
+  background: none;
+  border: 1px dashed color-mix(in srgb, var(--acid) 50%, transparent);
+  padding: 12px 16px;
+  text-align: left;
+}
+.about-details .acc-head:hover .acc-plus { color: var(--on-hover); }
+.about-details .acc-body { margin-top: 18px; }
 /* shared fill-on-hover button treatment — availability pill, hero status pill, accordion heads */
 .fill-btn {
   position: relative;
@@ -421,11 +434,13 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   font-family: 'JetBrains Mono', monospace;
   font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
   color: var(--acid);
-  display: inline-flex; align-items: center;
+  display: inline-flex; align-items: center; gap: 10px;
   border: 1px dashed color-mix(in srgb, var(--acid) 50%, transparent);
   padding: 10px 16px;
   text-decoration: none;
 }
+/* the availability pill carries the same + as the accordion heads — it spins on hover */
+.about-copy .avail:hover .acc-plus { color: var(--on-hover); transform: rotate(45deg); }
 
 /* hero status pill (Status / Available for work) — pulses at rest, fills on hover */
 .hero-meta .pulse {
@@ -1046,10 +1061,21 @@ footer .mono a:hover { color: var(--acid); }
     <div class="about-grid">
       <div class="about-copy reveal">
         <p class="pull">I build responsive web applications, interactive browser experiences and WebXR projects — combining immersive 3D environments with modern web technology.</p>
-        <p>I recently completed a <strong>Level 3 Certificate in Coding Practices</strong>, and I'm continuing to build on that — developing my skills in secure web development, application hardening and production deployment. My current focus is preparing web applications for commercial payment integration, which involves investigating security standards and applying secure development practices throughout.</p>
-        <p>Alongside this, I'm studying a <strong>Level 3 qualification in Cybersecurity</strong>, with a particular focus on the <strong>OWASP principles</strong> — the Open Worldwide Application Security Project's industry-standard framework, best known for its Top 10 catalogue of the most critical web application security risks and the defensive practices used to mitigate them. This study feeds directly into how I approach authentication, data protection and application hardening in my development work.</p>
-        <p>I also actively research AI-assisted software development — including Retrieval-Augmented Generation (RAG), Model Context Protocol (MCP), context engineering and sequential multi-agent workflows. My aim is to use AI as a development tool while retaining human oversight of architecture, security, testing and code quality.</p>
-        <a class="avail fill-btn" href="#contact">● Available for freelance & technical projects</a>
+        <div class="about-details acc">
+          <button class="acc-head fill-btn" type="button" aria-expanded="false" aria-controls="about-details-body">
+            <span>Further Details</span>
+            <span class="acc-plus" aria-hidden="true">+</span>
+          </button>
+          <div class="acc-body" id="about-details-body">
+            <p>I recently completed a <strong>Level 3 Certificate in Coding Practices</strong>, and I'm continuing to build on that — developing my skills in secure web development, application hardening and production deployment. My current focus is preparing web applications for commercial payment integration, which involves investigating security standards and applying secure development practices throughout.</p>
+            <p>Alongside this, I'm studying a <strong>Level 3 qualification in Cybersecurity</strong>, with a particular focus on the <strong>OWASP principles</strong> — the Open Worldwide Application Security Project's industry-standard framework, best known for its Top 10 catalogue of the most critical web application security risks and the defensive practices used to mitigate them. This study feeds directly into how I approach authentication, data protection and application hardening in my development work.</p>
+            <p>I also actively research AI-assisted software development — including Retrieval-Augmented Generation (RAG), Model Context Protocol (MCP), context engineering and sequential multi-agent workflows. My aim is to use AI as a development tool while retaining human oversight of architecture, security, testing and code quality.</p>
+          </div>
+        </div>
+        <a class="avail fill-btn" href="#contact">
+          <span>Available for freelance & technical projects</span>
+          <span class="acc-plus" aria-hidden="true">+</span>
+        </a>
       </div>
       <ul class="trait-list">
         <li class="reveal">
@@ -1684,19 +1710,46 @@ footer .mono a:hover { color: var(--acid); }
   (function accordions() {
     const accs = document.querySelectorAll('.acc');
     if (!accs.length) return;
-    // type a list of {el, text} items char-by-char so the whole body completes in totalMs
+    // type a list of {el, runs} items char-by-char so the whole body completes in
+    // totalMs — runs preserve inline <strong> markup instead of flattening it
+    function buildRuns(el) {
+      const runs = [];
+      (function collect(node, strong) {
+        node.childNodes.forEach(child => {
+          if (child.nodeType === 3) {
+            if (child.textContent) runs.push({ text: child.textContent, strong });
+          } else if (child.nodeType === 1) {
+            collect(child, strong || child.nodeName === 'STRONG');
+          }
+        });
+      })(el, false);
+      return runs;
+    }
     function typeElements(items, totalMs, done) {
-      const total = items.reduce((s, it) => s + it.text.length, 0);
+      const counts = items.map(it => it.runs.reduce((a, r) => a + r.text.length, 0));
+      const total = counts.reduce((a, c) => a + c, 0);
+      // timers clamp to ~4ms, so long bodies type a few chars per tick to still
+      // hit the totalMs target; short bodies type one char per tick
       const per = Math.max(4, totalMs / Math.max(1, total));
-      items.forEach(it => { it.el.textContent = ''; });
+      const step = Math.max(1, Math.ceil((4 * total) / totalMs));
+      items.forEach(it => { it.el.innerHTML = ''; });
       let ti = 0, ci = 0, timer = null;
       function cancel() { if (timer) { clearTimeout(timer); timer = null; } }
+      function render(item, upto) {
+        let remaining = upto, out = '';
+        for (const r of item.runs) {
+          if (remaining <= 0) break;
+          const take = Math.min(remaining, r.text.length);
+          out += r.strong ? '<strong>' + r.text.slice(0, take) + '</strong>' : r.text.slice(0, take);
+          remaining -= take;
+        }
+        item.el.innerHTML = out;
+      }
       function tick() {
         if (ti >= items.length) { if (done) done(); return; }
-        const it = items[ti];
-        it.el.textContent = it.text.slice(0, ci);
-        ci++;
-        if (ci > it.text.length) { ti++; ci = 0; }
+        render(items[ti], ci);
+        ci += step;
+        if (ci > counts[ti]) { ti++; ci = 0; }
         timer = setTimeout(tick, per);
       }
       tick();
@@ -1706,7 +1759,7 @@ footer .mono a:hover { color: var(--acid); }
       const head = acc.querySelector('.acc-head');
       const body = acc.querySelector('.acc-body');
       if (!head || !body) return;
-      const typeItems = [...body.querySelectorAll('p, li')].map(el => ({ el, text: el.textContent }));
+      const typeItems = [...body.querySelectorAll('p, li')].map(el => ({ el, runs: buildRuns(el) }));
       let cancel = null;
       function open() {
         acc.classList.add('open');
