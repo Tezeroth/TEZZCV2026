@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEZZ — Terence Honeyford · Curriculum Vitæ</title>
+<meta name="description" content="Terence Honeyford (Tezz) — Curriculum Vitæ. Professional profile, core skills, employment history, education and training, interests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=block" rel="stylesheet">
+<!-- Preload the latin webfonts so they download immediately — prevents the refresh font-wobble (FOUT) -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/anton/v27/1Ptgg87LROyAm3Kz-C8.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2">
+<style>
+/* ============================================================
+   TEZZ — INDUSTRIAL TYPE SYSTEM
+   Display: Anton · Body: Space Grotesk · Meta: JetBrains Mono
+   13 colour schemes, each = 4 colours (bg / text / acid / signal)
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #0b0b0c;
+  --ink-2: #121214;
+  --paper: #f2f0e9;
+  --dim: #8f8d85;
+  --acid: #d8ff3e;
+  --signal: #ff4d00;
+  --on-acid: var(--ink);
+  --hover: var(--acid);     /* hover-fill colour — defaults to acid, overridable per theme */
+  --on-hover: var(--on-acid); /* text colour used on hover fills */
+  --line: color-mix(in srgb, var(--paper) 16%, transparent);
+  --line-strong: color-mix(in srgb, var(--paper) 34%, transparent);
+  --header-bg: color-mix(in srgb, var(--ink) 82%, transparent);
+  --mobile-nav-bg: color-mix(in srgb, var(--ink) 97%, transparent);
+  --grid-line: color-mix(in srgb, var(--paper) 3%, transparent);
+  --hover-surface: color-mix(in srgb, var(--paper) 2%, transparent);
+  --thumb-stripe: color-mix(in srgb, var(--paper) 5%, transparent);
+  --pad: clamp(20px, 5vw, 64px);
+}
+
+/* colour scheme themes (cycled by the header toggle) */
+/* each theme = 4 colours: --ink (bg/surface) · --paper (text/headings) · --acid + --signal (accent pair) */
+html[data-theme="volt"]   { --ink: #050a14; --ink-2: #0a1220; --paper: #e9f6ff; --dim: #8fa8bd; --acid: #00e5ff; --signal: #ff2e88; }
+html[data-theme="ember"]  { --ink: #120a05; --ink-2: #1c1108; --paper: #ffeeda; --dim: #c9a183; --acid: #ffb000; --signal: #ff3b30; }
+html[data-theme="mint"]   { --ink: #04120b; --ink-2: #0a1f13; --paper: #e9fff4; --dim: #86b39a; --acid: #00ffa3; --signal: #f5d90a; }
+html[data-theme="cobalt"] { --ink: #0a0e1d; --ink-2: #111630; --paper: #eef1ff; --dim: #8f99c3; --acid: #5b8cff; --signal: #ff7847; --on-hover: #ffed00; }
+html[data-theme="rose"]   { --ink: #190a12; --ink-2: #26101c; --paper: #ffeef4; --dim: #c494a8; --acid: #ff5c8a; --signal: #00d4c8; }
+html[data-theme="paper"]  { --ink: #f2f0e9; --ink-2: #e4e1d8; --paper: #12100c; --dim: #6b6860; --acid: #5c7d00; --signal: #c44100; --on-acid: #ffffff; }
+html[data-theme="sky"]    { --ink: #eef3f7; --ink-2: #dfe7ee; --paper: #0e1a24; --dim: #526372; --acid: #0066a0; --signal: #d63a5b; --on-acid: #ffffff; }
+/* added themes: earth · retro · pastelpurple · neon · cyber */
+html[data-theme="earth"]  { --ink: #fbe8ce; --ink-2: #e4dfb5; --paper: #3f4a26; --dim: #6b6a44; --acid: #4a6b33; --signal: #8a7a3f; --on-acid: #ffffff; }
+html[data-theme="retro"]  { --ink: #91008d; --ink-2: #7a0076; --paper: #ffcf00; --dim: #dfa8d8; --acid: #00e0ba; --signal: #ff3483; --on-acid: #0c0c0c; }
+html[data-theme="pastelpurple"] { --ink: #cbc3de; --ink-2: #bdb4d6; --paper: #2e2747; --dim: #5c5590; --acid: #5a4a8c; --signal: #8a5d32; --on-acid: #ffffff; }
+html[data-theme="neon"]   { --ink: #000000; --ink-2: #0f6292; --paper: #ffed00; --dim: #4fa6c8; --acid: #16ff00; --signal: #4fb0ff; --on-acid: #000000; }
+html[data-theme="cyber"]  { --ink: #0055ff; --ink-2: #0041c6; --paper: #ffed00; --dim: #bcd2ff; --acid: #00e5ff; --signal: #ff2e88; --on-acid: #0c0c0c; }
+/* brand-identity palettes: wipeout · blueprint · hazard · terminal · sumi */
+html[data-theme="wipeout"]  { --ink: #070b1c; --ink-2: #101735; --paper: #d9f4ff; --dim: #7c94c9; --acid: #00f0ff; --signal: #ff00a8; --on-acid: #000b14; --hover: #ff00a8; --on-hover: #ffed00; }
+html[data-theme="blueprint"] { --ink: #17427e; --ink-2: #1d4f94; --paper: #eaf4ff; --dim: #9eb9dc; --acid: #ffffff; --signal: #39c6ff; --on-acid: #12396e; }
+html[data-theme="hazard"]  { --ink: #151515; --ink-2: #242424; --paper: #f7f7f2; --dim: #b0b0a8; --acid: #ffc400; --signal: #ff5a1f; --on-acid: #1a1a1a; }
+html[data-theme="terminal"] { --ink: #050807; --ink-2: #0c1210; --paper: #c9fdd9; --dim: #5f8f75; --acid: #00ff41; --signal: #ffb000; --on-acid: #001a0b; }
+html[data-theme="sumi"]    { --ink: #f4efe4; --ink-2: #e9e2d2; --paper: #241f18; --dim: #6e675b; --acid: #a03d2f; --signal: #2e5a88; --on-acid: #f8f4ea; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--acid); color: var(--on-acid); }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); }
+::-webkit-scrollbar-thumb:hover { background: var(--acid); }
+
+a { color: inherit; }
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.acid { color: var(--acid); }
+
+/* faint blueprint grid over whole page */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ CURSOR ============ */
+.cursor-dot, .cursor-box {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+.cursor-dot { width: 5px; height: 5px; background: var(--acid); }
+.cursor-box {
+  width: 30px; height: 30px;
+  border: 1px solid var(--line-strong);
+  transition: width .22s ease, height .22s ease, border-color .22s ease, transform .22s ease;
+}
+.cursor-box.hovering {
+  width: 46px; height: 46px;
+  border-color: var(--acid);
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+@media (hover: none) { .cursor-dot, .cursor-box { display: none; } }
+
+/* ============ TOP BAR ============ */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: stretch; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.brand {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px var(--pad);
+  text-decoration: none;
+  border-right: 1px solid var(--line);
+}
+.brand-mark {
+  width: 26px; height: 26px;
+  border: 2px solid var(--acid);
+  display: grid; place-items: center;
+  font-family: 'Anton', sans-serif;
+  font-size: .8rem; color: var(--acid);
+  letter-spacing: 0;
+}
+.brand-name { font-family: 'JetBrains Mono', monospace; font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; }
+.brand-name b { color: var(--acid); font-weight: 700; }
+
+.nav-links { display: flex; list-style: none; }
+.nav-links a {
+  display: flex; align-items: center;
+  height: 100%;
+  padding: 0 clamp(12px, 2vw, 26px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none;
+  border-left: 1px solid var(--line);
+  position: relative;
+  transition: color .2s, background .2s;
+}
+.nav-links a sup { color: var(--acid); margin-right: 6px; font-size: .58rem; }
+.nav-links a:hover, .nav-links a.active { color: var(--on-hover); background: var(--hover); }
+.nav-links a:hover sup, .nav-links a.active sup { color: var(--on-hover); }
+
+.theme-wrap {
+  display: flex; align-items: stretch;
+  border-left: 1px solid var(--line);
+}
+.theme-name {
+  display: flex; align-items: center;
+  padding: 0 14px;
+  font-size: .66rem; letter-spacing: .14em;
+  color: var(--dim);
+  white-space: nowrap;
+}
+.theme-toggle {
+  display: flex; align-items: center; gap: 5px;
+  padding: 0 18px;
+  background: none; border: none; border-left: 1px solid var(--line);
+  cursor: pointer;
+}
+.theme-toggle .sw { display: block; width: 11px; height: 11px; transition: transform .25s; }
+.theme-toggle .sw-a { background: var(--acid); }
+.theme-toggle .sw-b { background: var(--signal); }
+.theme-toggle:hover .sw { transform: rotate(45deg); }
+
+.burger {
+  display: none; align-items: center;
+  padding: 0 var(--pad);
+  background: none; border: none; border-left: 1px solid var(--line);
+  cursor: pointer;
+}
+.burger span { display: block; width: 24px; height: 2px; background: var(--paper); margin: 5px 0; transition: .25s; }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  position: relative;
+  padding-top: 54px;
+}
+.hero-meta {
+  display: flex; justify-content: space-between; gap: 20px;
+  padding: 18px var(--pad);
+  border-bottom: 1px solid var(--line);
+  color: var(--dim);
+  flex-wrap: wrap;
+}
+.hero-meta span b { color: var(--acid); font-weight: 400; }
+
+.kinetic {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(30px, 6vh, 70px) var(--pad);
+  user-select: none;
+}
+.k-line {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(3.4rem, 13.5vw, 12.5rem);
+  line-height: .92;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.k-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--paper);
+}
+.k-acid { color: var(--acid); }
+.k-row { display: flex; align-items: baseline; gap: clamp(14px, 3vw, 40px); flex-wrap: wrap; }
+.k-small {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(.68rem, 1.4vw, .95rem);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--dim);
+  max-width: 340px; line-height: 1.7;
+  white-space: normal;
+}
+.k-letter {
+  display: inline-block;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), color .28s;
+  cursor: default;
+}
+.k-letter:hover { transform: translateY(-.09em) skewX(-8deg); color: var(--acid); -webkit-text-stroke-color: var(--acid); }
+.k-word-indent { padding-left: clamp(0px, 8vw, 130px); }
+
+.hero-foot {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 24px; align-items: end;
+  padding: 0 var(--pad) clamp(28px, 5vh, 56px);
+}
+.hero-lede {
+  max-width: 520px;
+  color: var(--dim);
+  font-size: clamp(.95rem, 1.6vw, 1.08rem);
+}
+.hero-lede strong { color: var(--paper); font-weight: 500; }
+.btn-row { display: flex; gap: 0; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 17px 30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .74rem; letter-spacing: .16em; text-transform: uppercase;
+  text-decoration: none;
+  background: none;           /* <button> elements have a default grey face — clear it so the theme bg shows */
+  border: 1px solid var(--line-strong);
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+  transition: color .22s;
+  z-index: 1;
+}
+.btn + .btn { border-left: none; }
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--hover);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform .24s cubic-bezier(.65,0,.35,1);
+  z-index: -1;
+}
+.btn:hover { color: var(--on-hover); border-color: var(--hover); }
+.btn:hover::before { transform: scaleY(1); }
+.btn .arr { transition: transform .22s; }
+.btn:hover .arr { transform: translateX(5px); }
+
+/* ============================================================
+   MARQUEE — KINETIC TYPE STRIPS
+   ⚠️ DO NOT "FIX" THIS MARQUEE. READ THIS FIRST.
+   ------------------------------------------------------------
+   Motion is driven by GSAP (js block below) — NOT CSS keyframes.
+   History: translateX(-50%) keyframes caused a ~1px seam pop,
+   and rAF/GSAP-modifier wraps showed a BLANK GAP in Chrome at
+   the seam. The JS builds 6 identical clones and the tween
+   travels exactly ONE measured chunk width per loop, so the
+   loop lands on pixels that already exist on screen — Chrome
+   cannot show a gap. Do not change the animation approach.
+
+   HARD RULES (violate any and the pop returns):
+   1. No @keyframes / animation on .marquee-track.
+   2. .marquee-chunk MUST keep `flex: 0 0 auto` and NO padding —
+      the .x separators are the only spacing source.
+   3. Both duplicated chunks must stay IDENTICAL in the HTML.
+   4. Keep the IntersectionObserver + resize re-tween + the
+      document.fonts.ready gating in the JS ticker.
+   ============================================================ */
+.marquee {
+  overflow: hidden;              /* clips the scrolling track */
+  contain: layout style paint;   /* isolates rendering → no raster re-eval */
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--ink);
+  padding: 14px 0;
+  position: relative;
+  z-index: 1;
+}
+.marquee.acid-strip { background: var(--acid); color: var(--on-acid); border-color: var(--acid); }
+.marquee-track {
+  display: flex; width: max-content;   /* JS rebuilds this from 6 identical clones */
+}
+.marquee-chunk {
+  display: flex; align-items: center;
+  flex: 0 0 auto;              /* CRITICAL: chunk must NEVER shrink or resize */
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.marquee-chunk .x {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .5em;             /* separator glyph — the ONLY source of spacing */
+  padding: 0 .55em;            /* (chunk itself has NO padding — see rules) */
+  opacity: .55;
+}
+
+/* ============ SECTIONS ============ */
+main { position: relative; z-index: 1; }
+section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margin: 0 auto; }
+
+.sec-head {
+  display: flex; align-items: baseline; gap: clamp(16px, 3vw, 36px);
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 22px;
+  margin-bottom: clamp(38px, 6vh, 64px);
+  flex-wrap: wrap;
+}
+.sec-index {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .16em;
+  color: var(--acid);
+}
+.sec-title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+}
+.sec-note {
+  margin-left: auto;
+  color: var(--dim);
+  max-width: 300px;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .08s; }
+.reveal-d2 { transition-delay: .16s; }
+.reveal-d3 { transition-delay: .24s; }
+
+/* ============ PROFILE ============ */
+.profile-copy p { color: var(--dim); margin-bottom: 20px; font-size: 1.02rem; }
+.profile-copy p strong { color: var(--paper); font-weight: 500; }
+.profile-copy .pull {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height: 1.35;
+  color: var(--paper);
+  border-left: 3px solid var(--acid);
+  padding-left: 22px;
+  margin-bottom: 26px;
+}
+
+.trait-list { list-style: none; }
+.trait-list li {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 18px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.trait-list li:first-child { border-top: 1px solid var(--line); }
+.trait-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.5rem;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--acid);
+  line-height: 1;
+}
+.trait-list h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem; letter-spacing: .14em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.trait-list p { color: var(--dim); font-size: .92rem; }
+
+/* ============ SKILLS ============ */
+.skill-block { border-bottom: 1px solid var(--line); }
+.skill-block:first-of-type { border-top: 1px solid var(--line); }
+.skill-head {
+  display: grid; grid-template-columns: 60px 280px 1fr;
+  gap: clamp(14px, 3vw, 34px);
+  align-items: baseline;
+  padding: 26px 0;
+  transition: background .2s;
+}
+.skill-block:hover .skill-head { background: var(--hover-surface); }
+.skill-cat-num {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.15rem;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--dim);
+}
+.skill-block:hover .skill-cat-num { -webkit-text-stroke-color: var(--acid); }
+.skill-cat-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem; letter-spacing: .13em; text-transform: uppercase;
+}
+.token-wrap { display: flex; flex-wrap: wrap; gap: 8px 6px; }
+.tok {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .76rem;
+  color: var(--dim);
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  transition: color .18s, border-color .18s, background .18s;
+  cursor: default;
+}
+.tok:hover { color: var(--on-hover); background: var(--hover); border-color: var(--hover); }
+
+/* ============ EXPERIENCE ============ */
+.xp-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 170px;
+  gap: clamp(16px, 3vw, 44px);
+  padding: clamp(28px, 4vh, 44px) 0;
+  border-bottom: 1px solid var(--line);
+}
+.xp-row:first-of-type { border-top: 1px solid var(--line-strong); }
+.xp-num {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line-strong);
+  transition: -webkit-text-stroke-color .25s, color .25s;
+}
+.xp-row:hover .xp-num { -webkit-text-stroke-color: var(--acid); }
+.xp-body h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  margin-bottom: 10px;
+}
+.xp-body > p { color: var(--dim); margin-bottom: 14px; max-width: 640px; }
+.xp-body ul { list-style: none; columns: 1; }
+.xp-body ul li {
+  color: var(--dim); font-size: .93rem;
+  padding: 3px 0 3px 20px; position: relative;
+}
+.xp-body ul li::before {
+  content: '→'; position: absolute; left: 0;
+  color: var(--acid);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+}
+.xp-date {
+  justify-self: end;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--acid);
+  border: 1px solid color-mix(in srgb, var(--acid) 40%, transparent);
+  padding: 7px 12px;
+  height: fit-content;
+  white-space: nowrap;
+}
+
+/* ============ CONTACT ============ */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 90px);
+}
+.contact-copy > p { color: var(--dim); margin-bottom: 18px; font-size: 1rem; }
+.contact-lines { margin-top: 34px; }
+.c-line {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: padding-left .22s;
+}
+.c-line:first-child { border-top: 1px solid var(--line); }
+.c-line:hover { padding-left: 10px; }
+.c-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim);
+}
+.c-value { font-weight: 500; font-size: .98rem; word-break: break-all; }
+.c-arrow { color: var(--acid); font-family: 'JetBrains Mono', monospace; }
+
+form.contact-form { border: 1px solid var(--line); padding: clamp(24px, 3vw, 40px); }
+.form-group { margin-bottom: 26px; }
+.form-group label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+.form-group label i { color: var(--acid); font-style: normal; }
+.form-group input, .form-group textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  padding: 10px 2px;
+  outline: none;
+  resize: vertical;
+  transition: border-color .22s;
+  border-radius: 0;
+}
+.form-group input:focus, .form-group textarea:focus { border-bottom-color: var(--acid); }
+.form-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .74rem; letter-spacing: .06em;
+  min-height: 1.5em; margin-top: 14px;
+}
+.form-status.ok { color: var(--acid); }
+.form-status.err { color: var(--signal); }
+form .btn { width: 100%; justify-content: center; }
+
+/* ============ FOOTER ============ */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 26px var(--pad);
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  color: var(--dim);
+  position: relative; z-index: 1;
+}
+footer .mono a { color: var(--dim); text-decoration: none; }
+footer .mono a:hover { color: var(--acid); }
+
+.to-top {
+  position: fixed; bottom: 22px; right: 22px; z-index: 90;
+  width: 46px; height: 46px;
+  background: var(--ink);
+  border: 1px solid var(--line-strong);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  opacity: 0; pointer-events: none; transform: translateY(14px);
+  transition: .3s;
+}
+.to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+.to-top:hover { background: var(--hover); color: var(--on-hover); border-color: var(--hover); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1020px) {
+  .skill-head { grid-template-columns: 44px 1fr; }
+  .token-wrap { grid-column: 1 / -1; padding-left: calc(44px + clamp(14px, 3vw, 34px)); }
+  .profile-grid, .contact-grid { grid-template-columns: 1fr; }
+  .xp-row { grid-template-columns: 60px 1fr; }
+  .xp-date { grid-column: 2; justify-self: start; }
+}
+@media (max-width: 760px) {
+  .nav-links {
+    position: fixed; top: 53px; left: 0; right: 0;
+    flex-direction: column;
+    background: var(--mobile-nav-bg);
+    max-height: 0; overflow: hidden;
+    transition: max-height .35s ease;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-links.open { max-height: 420px; }
+  .nav-links a { padding: 16px var(--pad); border-left: none; border-top: 1px solid var(--line); }
+  .burger { display: block; }
+  .hero-foot { grid-template-columns: 1fr; }
+  .sec-note { margin-left: 0; }
+  .c-line { grid-template-columns: 86px 1fr; }
+  .c-arrow { display: none; }
+}
+@media (max-width: 500px) {
+  .brand { padding: 12px 14px; gap: 10px; }
+  .brand-name { display: none; }
+  .theme-name { padding: 0 10px; }
+  .theme-toggle { padding: 0 12px; }
+  .burger { padding: 0 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-box" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- ============ TOP BAR ============ -->
+<header id="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">T—H</span>
+    <span class="brand-name">Terence <b>Honeyford</b></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#profile"><sup>01</sup>Profile</a></li>
+    <li><a href="#skills"><sup>02</sup>Skills</a></li>
+    <li><a href="#employment"><sup>03</sup>Employment</a></li>
+    <li><a href="#education"><sup>04</sup>Education</a></li>
+    <li><a href="#contact"><sup>05</sup>Contact</a></li>
+  </ul>
+  <div class="theme-wrap">
+    <span class="theme-name mono" id="themeName">TDR</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Change colour scheme" title="Change colour scheme">
+      <span class="sw sw-a"></span><span class="sw sw-b"></span>
+    </button>
+  </div>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" style="padding-left:0;padding-right:0;">
+    <div class="hero-meta mono">
+      <span>Folio / <b>CV</b></span>
+      <span>Management · <b>Design</b> · E-Commerce</span>
+      <span>Status / <b>Open to opportunities</b></span>
+    </div>
+
+    <div class="kinetic" aria-label="Terence Honeyford — curriculum vitae">
+      <div class="k-line" aria-hidden="false">
+        <span class="k-letter">T</span><span class="k-letter">E</span><span class="k-letter">Z</span><span class="k-letter">Z</span>
+        <span class="k-acid">.</span>
+        <span class="k-small" style="margin-left:clamp(10px,3vw,40px)">Terence Honeyford<br>Curriculum Vitæ</span>
+      </div>
+      <div class="k-line k-outline k-word-indent" aria-hidden="true">WORK HISTORY</div>
+      <div class="k-row" aria-hidden="true">
+        <div class="k-line">&&nbsp;<span class="k-acid">CV</span>&nbsp;BUILDER</div>
+        <p class="k-small">PROFILE · SKILLS · EMPLOYMENT · EDUCATION · CONTACT</p>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <p class="hero-lede">Hardworking, determined professional with strengths in <strong>management, administration, marketing, design and e-commerce</strong> — tech-savvy, UI/UX aware and experienced in AI-driven workflows.</p>
+      <div class="btn-row">
+        <a href="#employment" class="btn">View history <span class="arr">→</span></a>
+        <a href="index.html" class="btn">Back to home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- kinetic strip -->
+  <div class="marquee acid-strip" aria-hidden="true">
+    <div class="marquee-track" data-marquee>
+      <div class="marquee-chunk">Curriculum Vitæ<span class="x">✕</span>Professional Profile<span class="x">✕</span>Core Skills<span class="x">✕</span>Employment History<span class="x">✕</span>Education<span class="x">✕</span></div>
+      <div class="marquee-chunk">Curriculum Vitæ<span class="x">✕</span>Professional Profile<span class="x">✕</span>Core Skills<span class="x">✕</span>Employment History<span class="x">✕</span>Education<span class="x">✕</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PROFILE ============ -->
+  <section id="profile">
+    <div class="sec-head reveal">
+      <span class="sec-index">01 /</span>
+      <h2 class="sec-title">Profile</h2>
+      <p class="sec-note">Who I am and what I bring to a team.</p>
+    </div>
+    <div class="profile-grid">
+      <div class="profile-copy reveal">
+        <p class="pull">Hardworking, determined professional with strengths in management, administration, marketing, design and e-commerce — proactive, tech-savvy and experienced in UI/UX and AI-driven workflows.</p>
+        <p>I enjoy problem-solving, coordinating tasks and continuous learning. I'm currently studying optimal workflow states and pipelines for <strong>web and virtual reality application development</strong>, with a focus on WebXR, 3D modelling and immersive web experiences.</p>
+        <p>With a background spanning <strong>retail management, public-sector casework, e-commerce and design</strong>, I bring a broad operational perspective to technical work — comfortable across the full range from customer-facing support to backend automation and creative production.</p>
+      </div>
+      <ul class="trait-list">
+        <li class="reveal">
+          <span class="trait-num">A</span>
+          <div>
+            <h3>Problem-Solver</h3>
+            <p>Coordinates tasks and finds practical solutions across operational and technical challenges.</p>
+          </div>
+        </li>
+        <li class="reveal reveal-d1">
+          <span class="trait-num">B</span>
+          <div>
+            <h3>Tech-Savvy</h3>
+            <p>Comfortable with modern tools, AI-driven workflows and emerging web standards.</p>
+          </div>
+        </li>
+        <li class="reveal reveal-d2">
+          <span class="trait-num">C</span>
+          <div>
+            <h3>Continuous Learner</h3>
+            <p>Always studying — from workflow pipelines to WebXR and immersive 3D experiences.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills">
+    <div class="sec-head reveal">
+      <span class="sec-index">02 /</span>
+      <h2 class="sec-title">Core Skills</h2>
+      <p class="sec-note">Management, operations, marketing, design, technical and stakeholder support.</p>
+    </div>
+
+    <div class="skill-block reveal">
+      <div class="skill-head">
+        <span class="skill-cat-num">S1</span>
+        <span class="skill-cat-name">Management & Leadership</span>
+        <div class="token-wrap">
+          <span class="tok">Shop management</span><span class="tok">Staff training</span><span class="tok">Budgeting</span><span class="tok">Sales targets</span><span class="tok">Operational oversight</span><span class="tok">Multi-site leadership</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-head">
+        <span class="skill-cat-num">S2</span>
+        <span class="skill-cat-name">Administration & Operations</span>
+        <div class="token-wrap">
+          <span class="tok">Case management</span><span class="tok">Invoicing</span><span class="tok">Procurement</span><span class="tok">Database maintenance</span><span class="tok">Process compliance</span><span class="tok">Confidential information handling</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-head">
+        <span class="skill-cat-num">S3</span>
+        <span class="skill-cat-name">Marketing & E-Commerce</span>
+        <div class="token-wrap">
+          <span class="tok">Social media promotions</span><span class="tok">SEO</span><span class="tok">CMS management</span><span class="tok">Mailchimp</span><span class="tok">Online sales growth</span><span class="tok">Magento backend</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-head">
+        <span class="skill-cat-num">S4</span>
+        <span class="skill-cat-name">Design & Creative</span>
+        <div class="token-wrap">
+          <span class="tok">Graphic design</span><span class="tok">Typography</span><span class="tok">Vector graphics</span><span class="tok">Proofreading</span><span class="tok">Adobe Creative Suite</span><span class="tok">Sign-making</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-head">
+        <span class="skill-cat-num">S5</span>
+        <span class="skill-cat-name">Tech & Development</span>
+        <div class="token-wrap">
+          <span class="tok">HTML</span><span class="tok">CSS</span><span class="tok">JavaScript</span><span class="tok">PowerShell automation</span><span class="tok">GitHub workflow</span><span class="tok">AI-driven tooling</span><span class="tok">WebXR</span><span class="tok">3D modelling</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block reveal">
+      <div class="skill-head">
+        <span class="skill-cat-num">S6</span>
+        <span class="skill-cat-name">Customer & Stakeholder Support</span>
+        <div class="token-wrap">
+          <span class="tok">Phone & face-to-face service</span><span class="tok">Team collaboration</span><span class="tok">Stakeholder communication</span><span class="tok">Confidentiality</span><span class="tok">Performance targets</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- kinetic strip -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" data-marquee>
+      <div class="marquee-chunk">Employment<span class="x">/</span>Education<span class="x">/</span>Employment<span class="x">/</span>Education<span class="x">/</span></div>
+      <div class="marquee-chunk">Employment<span class="x">/</span>Education<span class="x">/</span>Employment<span class="x">/</span>Education<span class="x">/</span></div>
+    </div>
+  </div>
+
+  <!-- ============ EMPLOYMENT ============ -->
+  <section id="employment">
+    <div class="sec-head reveal">
+      <span class="sec-index">03 /</span>
+      <h2 class="sec-title">Employment History</h2>
+      <p class="sec-note">Management, public-sector casework, e-commerce, design and print.</p>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E1</span>
+      <div class="xp-body">
+        <h3>His Majesty's Courts & Tribunals Service</h3>
+        <p>Online Civil Money Claims Support Officer — temporary contract (6 months).</p>
+        <ul>
+          <li>Support online civil money claims case queries via phone to claimants, defendants and solicitors</li>
+          <li>Process payments and various court document applications</li>
+          <li>Update case management databases, ensuring compliance with procedural and security standards</li>
+          <li>Collaborate with team leads to meet strict performance and confidentiality requirements</li>
+          <li>Process county court judgements</li>
+        </ul>
+      </div>
+      <span class="xp-date">2025</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E2</span>
+      <div class="xp-body">
+        <h3>Bedz Bedzz & Bedroomszzz</h3>
+        <p>E-commerce Operations Specialist — temporary contract (6 months).</p>
+        <ul>
+          <li>Processed online orders, updated product listings and maintained the CMS</li>
+          <li>Learned to automate repetitive tasks using PowerShell / PowerScript</li>
+          <li>Gained insights into SEO and Magento backend web store operations</li>
+        </ul>
+      </div>
+      <span class="xp-date">2024</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E3</span>
+      <div class="xp-body">
+        <h3>Oxfam</h3>
+        <p>Deputy Manager — leading shop operations and staff across two sites (Leek & Buxton).</p>
+        <ul>
+          <li>Managed administration, procurement, budgeting, sales targets, cash handling and customer service</li>
+          <li>Trained and supervised volunteers; hosted fundraising events such as Oxjam</li>
+          <li>Managed e-commerce activities and social media promotions</li>
+          <li>Provided mobile tech support for the South Yorkshire & Derbyshire Shop region</li>
+          <li>Managed shops for up to 2 months at a time during manager absences</li>
+          <li>Contributed to a 45% growth in online sales</li>
+        </ul>
+      </div>
+      <span class="xp-date">2011 — 2024</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E4</span>
+      <div class="xp-body">
+        <h3>Buxton & Leek College</h3>
+        <p>Marketing, Administration & Finance — four interim assignments (eight months total) for a college and university.</p>
+        <ul>
+          <li>Room audits, purchase orders, cheque processing, archiving, invoice reconciliation and marketing materials</li>
+          <li>Coordinated mailshots; proofreading and copywriting; mail-merge and Mailchimp promotions</li>
+          <li>Phone-based customer service for bookings and general inquiries</li>
+        </ul>
+      </div>
+      <span class="xp-date">2014 — 2015</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E5</span>
+      <div class="xp-body">
+        <h3>V&C Services (Peak & Dales)</h3>
+        <p>Administration, Marketing & Coaching — marketing assistant in a fast-paced office environment.</p>
+        <ul>
+          <li>Produced copy for press releases and adverts; scheduled Facebook posts; coordinated social media</li>
+          <li>Administration, database maintenance and project coordination</li>
+          <li>Helped start a computing assistance service for older people</li>
+          <li>Handled confidential information and customer enquiries face-to-face and by phone</li>
+        </ul>
+      </div>
+      <span class="xp-date">2014</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E6</span>
+      <div class="xp-body">
+        <h3>Hotline Signs</h3>
+        <p>Sign-Maker — graphic design, typography and vector graphics for a local sign-makers.</p>
+        <ul>
+          <li>Worked to design briefs from customers; proofreading and typography</li>
+          <li>Handled and modelled various substrates; installed signs; applied printed vinyl to large surface areas</li>
+          <li>Woodworking, carpentry and use of various power tools</li>
+          <li>Most recent jobs included networking financial systems and processing invoices</li>
+        </ul>
+      </div>
+      <span class="xp-date">1998 — 2019</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E7</span>
+      <div class="xp-body">
+        <h3>The DAIN Project</h3>
+        <p>Publicity Officer & Tutor — regional publicity officer for the Digital Activist Inclusion Network.</p>
+        <ul>
+          <li>Helped exceed recruitment targets as regional publicity officer</li>
+          <li>Tutored IT; trained in Social Return on Investment research and video editing</li>
+          <li>Team won a Digital Champions award on behalf of the Workers Educational Foundation</li>
+        </ul>
+      </div>
+      <span class="xp-date">2011</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E8</span>
+      <div class="xp-body">
+        <h3>Print Express</h3>
+        <p>Printer — balancing workloads on an offset litho press for a local firm.</p>
+        <ul>
+          <li>Advised customers on design and composition; proofreading</li>
+          <li>Job prioritization, plate making, printing and finishing</li>
+        </ul>
+      </div>
+      <span class="xp-date">2003 — 2005</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E9</span>
+      <div class="xp-body">
+        <h3>J.D. Williams</h3>
+        <p>CMS Administrator — six-month temporary contract as part of the E-business team in Manchester.</p>
+        <ul>
+          <li>Accurate and fast data input; proofreading and copy</li>
+          <li>HTML and SQL; quality assurance; producing sales copy</li>
+        </ul>
+      </div>
+      <span class="xp-date">2003</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">E10</span>
+      <div class="xp-body">
+        <h3>Focal Design</h3>
+        <p>Reprographics Technician — print and design company in New Mills.</p>
+        <ul>
+          <li>Retouching artwork; database creation and entry</li>
+          <li>Production of films and plates for printing presses; imposition; pagination; proofreading</li>
+        </ul>
+      </div>
+      <span class="xp-date">2000 — 2003</span>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION ============ -->
+  <section id="education">
+    <div class="sec-head reveal">
+      <span class="sec-index">04 /</span>
+      <h2 class="sec-title">Education & Training</h2>
+      <p class="sec-note">Qualifications, bootcamps and continuous study.</p>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">ED</span>
+      <div class="xp-body">
+        <h3>NCFE Level 3 Certificate in Coding Practices</h3>
+        <p>Completed qualification covering coding standards, maintainability, documentation and structured development practice.</p>
+        <ul>
+          <li>Applied secure development principles across web projects</li>
+          <li>Prepares for commercial payment integration and production deployment</li>
+        </ul>
+      </div>
+      <span class="xp-date">Completed</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">ED</span>
+      <div class="xp-body">
+        <h3>NCFE Level 3 Certificate in Cyber Security</h3>
+        <p>Currently studying — focused on OWASP principles, the industry-standard security framework.</p>
+        <ul>
+          <li>OWASP Top 10 — the most critical web application security risks</li>
+          <li>Authentication, data protection and application hardening practices</li>
+        </ul>
+      </div>
+      <span class="xp-date">Currently studying</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">ED</span>
+      <div class="xp-body">
+        <h3>edX Skills Bootcamp — Front End Web Development</h3>
+        <p>Online study course.</p>
+        <ul>
+          <li>HTML, CSS, JavaScript, the GitHub workflow, Bootstrap, APIs, Node.js and npm packages</li>
+        </ul>
+      </div>
+      <span class="xp-date">2024</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">ED</span>
+      <div class="xp-body">
+        <h3>University of Derby — HND Media Applications & PR</h3>
+        <p>Graphic design, the Adobe suite, marketing, branding and advertising.</p>
+        <ul>
+          <li>Project management — lead editor of the student magazine project</li>
+          <li>HTML, CSS, SEO, PPC, SMO and E-PR techniques</li>
+        </ul>
+      </div>
+      <span class="xp-date">2007 — 2009</span>
+    </div>
+
+    <div class="xp-row reveal">
+      <span class="xp-num">ED</span>
+      <div class="xp-body">
+        <h3>High Peak College Buxton — Advanced BTEC GNVQ in IT</h3>
+        <p>Full secondary education at Buxton Community School.</p>
+        <ul>
+          <li>Advanced BTEC GNVQ in Information Technology (High Peak College Buxton, 1998—1999)</li>
+          <li>Full secondary education (Buxton Community School, 1992—1997)</li>
+        </ul>
+      </div>
+      <span class="xp-date">1992 — 1999</span>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="sec-head reveal">
+      <span class="sec-index">05 /</span>
+      <h2 class="sec-title">Contact</h2>
+      <p class="sec-note">Get in touch — usually replying within 24 hours.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-copy reveal">
+        <p>Interests — socialising, gaming, guitar, piano, electronic drum machines and synthesizers. Reading, 3D computer graphics and modelling, programming.</p>
+        <p>Passionate about <strong>WebXR, 3D modelling and immersive web experiences</strong>.</p>
+        <div class="contact-lines">
+          <a class="c-line" href="tel:07763900778">
+            <span class="c-label">Phone</span>
+            <span class="c-value">07763 900 778</span>
+            <span class="c-arrow">↗</span>
+          </a>
+          <a class="c-line" href="mailto:Terence.Honeyford@Outlook.com">
+            <span class="c-label">Email</span>
+            <span class="c-value">Terence.Honeyford@Outlook.com</span>
+            <span class="c-arrow">↗</span>
+          </a>
+          <a class="c-line" href="https://www.linkedin.com/in/terencehoneyford" target="_blank" rel="noopener noreferrer">
+            <span class="c-label">LinkedIn</span>
+            <span class="c-value">/in/terencehoneyford</span>
+            <span class="c-arrow">↗</span>
+          </a>
+          <a class="c-line" href="https://sketchfab.com/Tezz" target="_blank" rel="noopener noreferrer">
+            <span class="c-label">Sketchfab</span>
+            <span class="c-value">sketchfab.com/Tezz</span>
+            <span class="c-arrow">↗</span>
+          </a>
+          <a class="c-line" href="https://github.com/Tezeroth" target="_blank" rel="noopener noreferrer">
+            <span class="c-label">GitHub</span>
+            <span class="c-value">github.com/Tezeroth</span>
+            <span class="c-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <form class="contact-form reveal reveal-d1" id="contactForm" novalidate>
+        <div class="form-group">
+          <label for="name">Your Name <i>*</i></label>
+          <input type="text" id="name" name="name" placeholder="Jane Doe" required minlength="2" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address <i>*</i></label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="message">Message <i>*</i></label>
+          <textarea id="message" name="message" rows="5" placeholder="Tell me about your project…" required minlength="10"></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message <span class="arr">→</span></button>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="mono">© <span id="year"></span> Tezz / Terence Honeyford</span>
+  <span class="mono">Built with HTML · CSS · JavaScript — no frameworks</span>
+  <span class="mono">
+    <a href="index.html">BACK TO HOME</a> /
+    <a href="https://github.com/Tezeroth" target="_blank" rel="noopener noreferrer">GH</a> /
+    <a href="https://www.linkedin.com/in/terencehoneyford" target="_blank" rel="noopener noreferrer">LI</a> /
+    <a href="https://sketchfab.com/Tezz" target="_blank" rel="noopener noreferrer">SF</a>
+  </span>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<!-- GSAP core — local file (no CDN). 72KB, loads from disk in ~1ms. -->
+<script src="gsap.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- Colour scheme cycler ---------- */
+  const THEMES = ['tdr', 'volt', 'ember', 'mint', 'cobalt', 'rose', 'paper', 'sky', 'earth', 'retro', 'pastelpurple', 'neon', 'cyber', 'wipeout', 'blueprint', 'hazard', 'terminal', 'sumi'];
+  let themeIndex = 0;
+  try {
+    const saved = localStorage.getItem('tezz-theme');
+    if (saved && THEMES.includes(saved)) themeIndex = THEMES.indexOf(saved);
+  } catch (e) { /* storage unavailable — default theme */ }
+
+  function applyTheme() {
+    const t = THEMES[themeIndex];
+    if (t === 'tdr') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeName').textContent = t === 'pastelpurple' ? 'PASTEL PURPLE' : t.toUpperCase();
+    try { localStorage.setItem('tezz-theme', t); } catch (e) { /* ignore */ }
+  }
+  applyTheme();
+
+  /* ============================================================
+     MARQUEE TICKER — GSAP "CLONE THE ITEM" (local gsap.min.js)
+     ------------------------------------------------------------
+     WHY THIS TECHNIQUE:
+     The user's Chrome showed the seam as a BLANK GAP: text scrolls
+     off left, the area goes empty, then the next copy "pops in".
+     The previous approaches (translateX(-50%) keyframes, rAF
+     wrap-by-addition, GSAP modifiers `x % chunkWidth`) each still
+     produced the gap in Chrome because the compositor does not
+     re-render wrapped content in the same frame as the transform
+     wrap. GSAP's documented remedy is "clone the item": make the
+     track long enough that the tween NEVER wraps — it travels
+     exactly ONE measured chunk width and repeats, landing exactly
+     where the next identical clone begins. Loop-point pixels are
+     already on screen and bit-for-bit identical → no gap possible.
+     ------------------------------------------------------------
+     HOW IT WORKS:
+     - buildTrack(): clones ONE chunk's HTML into 6 identical
+       .marquee-chunk divs (guarded by `data-cloned` so it runs once).
+     - oneChunkWidth(): measures the real rendered first clone width
+       (fractional values are fine — the tween travels that exact px).
+     - The tween: x 0 → -w (w = measured width), duration = w/112
+       → constant 112px/s, ease none, repeat -1. After it ends it
+       restarts at the identical pixels of the next clone — invisible.
+     ------------------------------------------------------------
+     RULES — do not violate these or the bug returns:
+     1. gsap.min.js MUST stay in the project root (no CDN).
+     2. Never replace this with a CSS @keyframes animation.
+     3. Never remove `flex: 0 0 auto` from .marquee-chunk or add
+        padding — separators .x are the only spacing.
+     4. The track is rebuilt from clones of ONE chunk; the HTML
+        source chunk must stay canonical.
+     5. Keep the IntersectionObserver, resize re-tween, hover pause
+        and document.fonts.ready gating.
+     6. Keep index.html's ticker identical.
+     ============================================================ */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.marquee').forEach(function (marquee) {
+    const track = marquee.querySelector('.marquee-track');
+    let tween = null;
+
+    /* Build the track from 6 identical clones of ONE chunk.
+       This is the GSAP-docs "clone the item" technique — the tween only
+       ever travels exactly ONE measured chunk width, so at the loop point
+       the pixels are bit-for-bit identical. No modifiers, no wrapping,
+       no compositor quirk → Chrome cannot ever show a blank gap. */
+    function buildTrack() {
+      if (track.dataset.cloned) return;
+      const source = track.querySelector('.marquee-chunk');
+      const html = source.innerHTML;
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 6; i++) {
+        const clone = document.createElement('div');
+        clone.className = 'marquee-chunk';
+        clone.innerHTML = html;
+        frag.appendChild(clone);
+      }
+      track.innerHTML = '';
+      track.appendChild(frag);
+      track.dataset.cloned = '1';
+    }
+
+    function oneChunkWidth() {
+      buildTrack();
+      return track.querySelector('.marquee-chunk').getBoundingClientRect().width;
+    }
+
+    function buildTween() {
+      if (reduceMotion) return;
+      if (typeof gsap === 'undefined') return; // fail-safe: never break page JS if gsap.min.js is missing
+      if (tween) tween.kill();
+      const w = oneChunkWidth();
+      if (!w) return;
+      tween = gsap.to(track, {
+        x: -w,                  // travel exactly ONE chunk width per loop
+        duration: w / 112,      // constant 112px/s regardless of chunk width
+        ease: 'none',
+        repeat: -1
+      });
+    }
+
+    const marqueeIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          if (!tween) buildTween();
+          if (tween) tween.play();
+        } else if (tween) {
+          tween.pause();
+        }
+      });
+    }, { threshold: 0 });
+    marqueeIO.observe(marquee);
+
+    marquee.addEventListener('mouseenter', function () { if (tween) tween.pause(); });
+    marquee.addEventListener('mouseleave', function () { if (tween) tween.play(); });
+    window.addEventListener('resize', buildTween);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(buildTween).catch(buildTween);
+    } else {
+      buildTween();
+    }
+  });
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    themeIndex = (themeIndex + 1) % THEMES.length;
+    applyTheme();
+  });
+
+  /* ---------- Nav state ---------- */
+  const navLinks = document.getElementById('navLinks');
+  const anchors = Array.from(navLinks.querySelectorAll('a'));
+  const toTop = document.getElementById('toTop');
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+
+  function onScroll() {
+    toTop.classList.toggle('show', window.scrollY > 600);
+    let current = sections[0] && sections[0].id;
+    for (const s of sections) {
+      if (window.scrollY >= s.offsetTop - 160) current = s.id;
+    }
+    anchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---------- Mobile menu ---------- */
+  const burger = document.getElementById('burger');
+  burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.addEventListener('click', e => {
+    if (e.target.closest('a')) navLinks.classList.remove('open');
+  });
+
+  /* ---------- Custom cursor (square, rotates on hover) ---------- */
+  const dot = document.querySelector('.cursor-dot');
+  const box = document.querySelector('.cursor-box');
+  if (window.matchMedia('(hover: hover)').matches) {
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+    }, { passive: true });
+    (function loop() {
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      const hovering = box.classList.contains('hovering');
+      box.style.left = rx + 'px';
+      box.style.top = ry + 'px';
+      if (!hovering) box.style.transform = 'translate(-50%,-50%)';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button, input, textarea, .k-letter, .tok').forEach(el => {
+      el.addEventListener('mouseenter', () => box.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => box.classList.remove('hovering'));
+    });
+  } else {
+    dot.remove(); box.remove();
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.classList.add('visible');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ---------- Contact form validation (same mailto flow as index.html) ---------- */
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    status.className = 'form-status';
+
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const message = form.message.value.trim();
+
+    function fail(msg) {
+      status.classList.add('err');
+      status.textContent = '// ERROR: ' + msg;
+    }
+
+    if (name.length < 2) return fail('Please enter your name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Please enter a valid email address.');
+    if (message.length < 10) return fail('Message should be at least 10 characters.');
+
+    status.classList.add('ok');
+    status.textContent = '// OK — opening your email client…';
+
+    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
+    const body = encodeURIComponent(`${message}
+
+— ${name} (${email})`);
+    window.location.href = `mailto:Terence.Honeyford@Outlook.com?subject=${subject}&body=${body}`;
+
+    form.reset();
+    setTimeout(() => { status.textContent = ''; status.className = 'form-status'; }, 6000);
+  });
+
+})();
+</script>
+
+<script>
+  /* ---------- First-visit theme: WIPEOUT ---------- */
+  try {
+    if (!localStorage.getItem('tezz-theme')) {
+      localStorage.setItem('tezz-theme', 'wipeout');
+      document.documentElement.setAttribute('data-theme', 'wipeout');
+      const nameEl = document.getElementById('themeName');
+      if (nameEl) nameEl.textContent = 'WIPEOUT';
+    }
+  } catch (e) { /* ignore */ }
+</script>
+</body>
+</html>

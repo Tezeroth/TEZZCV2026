@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEZZ — Graphic Design Portfolio</title>
+<meta name="description" content="Graphic design portfolio — placeholder showcase in lorem ipsum. Terence Honeyford (Tezz), graphic design and branding.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=block" rel="stylesheet">
+<!-- Preload the latin webfonts so they download immediately — prevents the refresh font-wobble (FOUT) -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/anton/v27/1Ptgg87LROyAm3Kz-C8.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/spacegrotesk/v22/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2">
+<style>
+/* ============================================================
+   TEZZ — INDUSTRIAL TYPE SYSTEM
+   Display: Anton · Body: Space Grotesk · Meta: JetBrains Mono
+   18 colour schemes, each = 4 colours (bg / text / acid / signal)
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #0b0b0c;
+  --ink-2: #121214;
+  --paper: #f2f0e9;
+  --dim: #8f8d85;
+  --acid: #d8ff3e;
+  --signal: #ff4d00;
+  --on-acid: var(--ink);
+  --hover: var(--acid);     /* hover-fill colour — defaults to acid, overridable per theme */
+  --on-hover: var(--on-acid); /* text colour used on hover fills */
+  --line: color-mix(in srgb, var(--paper) 16%, transparent);
+  --line-strong: color-mix(in srgb, var(--paper) 34%, transparent);
+  --header-bg: color-mix(in srgb, var(--ink) 82%, transparent);
+  --mobile-nav-bg: color-mix(in srgb, var(--ink) 97%, transparent);
+  --grid-line: color-mix(in srgb, var(--paper) 3%, transparent);
+  --hover-surface: color-mix(in srgb, var(--paper) 2%, transparent);
+  --thumb-stripe: color-mix(in srgb, var(--paper) 5%, transparent);
+  --pad: clamp(20px, 5vw, 64px);
+}
+
+/* colour scheme themes (cycled by the header toggle) */
+/* each theme = 4 colours: --ink (bg/surface) · --paper (text/headings) · --acid + --signal (accent pair) */
+html[data-theme="volt"]   { --ink: #050a14; --ink-2: #0a1220; --paper: #e9f6ff; --dim: #8fa8bd; --acid: #00e5ff; --signal: #ff2e88; }
+html[data-theme="ember"]  { --ink: #120a05; --ink-2: #1c1108; --paper: #ffeeda; --dim: #c9a183; --acid: #ffb000; --signal: #ff3b30; }
+html[data-theme="mint"]   { --ink: #04120b; --ink-2: #0a1f13; --paper: #e9fff4; --dim: #86b39a; --acid: #00ffa3; --signal: #f5d90a; }
+html[data-theme="cobalt"] { --ink: #0a0e1d; --ink-2: #111630; --paper: #eef1ff; --dim: #8f99c3; --acid: #5b8cff; --signal: #ff7847; --on-hover: #ffed00; }
+html[data-theme="rose"]   { --ink: #190a12; --ink-2: #26101c; --paper: #ffeef4; --dim: #c494a8; --acid: #ff5c8a; --signal: #00d4c8; }
+html[data-theme="paper"]  { --ink: #f2f0e9; --ink-2: #e4e1d8; --paper: #12100c; --dim: #6b6860; --acid: #5c7d00; --signal: #c44100; --on-acid: #ffffff; }
+html[data-theme="sky"]    { --ink: #eef3f7; --ink-2: #dfe7ee; --paper: #0e1a24; --dim: #526372; --acid: #0066a0; --signal: #d63a5b; --on-acid: #ffffff; }
+/* added themes: earth · retro · pastelpurple · neon · cyber */
+html[data-theme="earth"]  { --ink: #fbe8ce; --ink-2: #e4dfb5; --paper: #3f4a26; --dim: #6b6a44; --acid: #4a6b33; --signal: #8a7a3f; --on-acid: #ffffff; }
+html[data-theme="retro"]  { --ink: #91008d; --ink-2: #7a0076; --paper: #ffcf00; --dim: #dfa8d8; --acid: #00e0ba; --signal: #ff3483; --on-acid: #0c0c0c; }
+html[data-theme="pastelpurple"] { --ink: #cbc3de; --ink-2: #bdb4d6; --paper: #2e2747; --dim: #5c5590; --acid: #5a4a8c; --signal: #8a5d32; --on-acid: #ffffff; }
+html[data-theme="neon"]   { --ink: #000000; --ink-2: #0f6292; --paper: #ffed00; --dim: #4fa6c8; --acid: #16ff00; --signal: #4fb0ff; --on-acid: #000000; }
+html[data-theme="cyber"]  { --ink: #0055ff; --ink-2: #0041c6; --paper: #ffed00; --dim: #bcd2ff; --acid: #00e5ff; --signal: #ff2e88; --on-acid: #0c0c0c; }
+/* brand-identity palettes: wipeout · blueprint · hazard · terminal · sumi */
+html[data-theme="wipeout"]  { --ink: #070b1c; --ink-2: #101735; --paper: #d9f4ff; --dim: #7c94c9; --acid: #00f0ff; --signal: #ff00a8; --on-acid: #000b14; --hover: #ff00a8; --on-hover: #ffed00; }
+html[data-theme="blueprint"] { --ink: #17427e; --ink-2: #1d4f94; --paper: #eaf4ff; --dim: #9eb9dc; --acid: #ffffff; --signal: #39c6ff; --on-acid: #12396e; }
+html[data-theme="hazard"]  { --ink: #151515; --ink-2: #242424; --paper: #f7f7f2; --dim: #b0b0a8; --acid: #ffc400; --signal: #ff5a1f; --on-acid: #1a1a1a; }
+html[data-theme="terminal"] { --ink: #050807; --ink-2: #0c1210; --paper: #c9fdd9; --dim: #5f8f75; --acid: #00ff41; --signal: #ffb000; --on-acid: #001a0b; }
+html[data-theme="sumi"]    { --ink: #f4efe4; --ink-2: #e9e2d2; --paper: #241f18; --dim: #6e675b; --acid: #a03d2f; --signal: #2e5a88; --on-acid: #f8f4ea; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--acid); color: var(--on-acid); }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); }
+::-webkit-scrollbar-thumb:hover { background: var(--acid); }
+
+a { color: inherit; }
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.acid { color: var(--acid); }
+
+/* faint blueprint grid over whole page */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ CURSOR ============ */
+.cursor-dot, .cursor-box {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+.cursor-dot { width: 5px; height: 5px; background: var(--acid); }
+.cursor-box {
+  width: 30px; height: 30px;
+  border: 1px solid var(--line-strong);
+  transition: width .22s ease, height .22s ease, border-color .22s ease, transform .22s ease;
+}
+.cursor-box.hovering {
+  width: 46px; height: 46px;
+  border-color: var(--acid);
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+@media (hover: none) { .cursor-dot, .cursor-box { display: none; } }
+
+/* ============ TOP BAR ============ */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: stretch; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.brand {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px var(--pad);
+  text-decoration: none;
+  border-right: 1px solid var(--line);
+}
+.brand-mark {
+  width: 26px; height: 26px;
+  border: 2px solid var(--acid);
+  display: grid; place-items: center;
+  font-family: 'Anton', sans-serif;
+  font-size: .8rem; color: var(--acid);
+  letter-spacing: 0;
+}
+.brand-name { font-family: 'JetBrains Mono', monospace; font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; }
+.brand-name b { color: var(--acid); font-weight: 700; }
+
+.nav-links { display: flex; list-style: none; }
+.nav-links a {
+  display: flex; align-items: center;
+  height: 100%;
+  padding: 0 clamp(12px, 2vw, 26px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim); text-decoration: none;
+  border-left: 1px solid var(--line);
+  position: relative;
+  transition: color .2s, background .2s;
+}
+.nav-links a sup { color: var(--acid); margin-right: 6px; font-size: .58rem; }
+.nav-links a:hover, .nav-links a.active { color: var(--on-hover); background: var(--hover); }
+.nav-links a:hover sup, .nav-links a.active sup { color: var(--on-hover); }
+
+.theme-wrap {
+  display: flex; align-items: stretch;
+  border-left: 1px solid var(--line);
+}
+.theme-name {
+  display: flex; align-items: center;
+  padding: 0 14px;
+  font-size: .66rem; letter-spacing: .14em;
+  color: var(--dim);
+  white-space: nowrap;
+}
+.theme-toggle {
+  display: flex; align-items: center; gap: 5px;
+  padding: 0 18px;
+  background: none; border: none; border-left: 1px solid var(--line);
+  cursor: pointer;
+}
+.theme-toggle .sw { display: block; width: 11px; height: 11px; transition: transform .25s; }
+.theme-toggle .sw-a { background: var(--acid); }
+.theme-toggle .sw-b { background: var(--signal); }
+.theme-toggle:hover .sw { transform: rotate(45deg); }
+
+.burger {
+  display: none; align-items: center;
+  padding: 0 var(--pad);
+  background: none; border: none; border-left: 1px solid var(--line);
+  cursor: pointer;
+}
+.burger span { display: block; width: 24px; height: 2px; background: var(--paper); margin: 5px 0; transition: .25s; }
+
+/* ============ HERO ============ */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  position: relative;
+  padding-top: 54px;
+}
+.hero-meta {
+  display: flex; justify-content: space-between; gap: 20px;
+  padding: 18px var(--pad);
+  border-bottom: 1px solid var(--line);
+  color: var(--dim);
+  flex-wrap: wrap;
+}
+.hero-meta span b { color: var(--acid); font-weight: 400; }
+
+.kinetic {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(30px, 6vh, 70px) var(--pad);
+  user-select: none;
+}
+.k-line {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(3.4rem, 13.5vw, 12.5rem);
+  line-height: .92;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.k-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--paper);
+}
+.k-acid { color: var(--acid); }
+.k-row { display: flex; align-items: baseline; gap: clamp(14px, 3vw, 40px); flex-wrap: wrap; }
+.k-small {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(.68rem, 1.4vw, .95rem);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--dim);
+  max-width: 340px; line-height: 1.7;
+  white-space: normal;
+}
+.k-letter {
+  display: inline-block;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), color .28s;
+  cursor: default;
+}
+.k-letter:hover { transform: translateY(-.09em) skewX(-8deg); color: var(--acid); -webkit-text-stroke-color: var(--acid); }
+.k-word-indent { padding-left: clamp(0px, 8vw, 130px); }
+
+.hero-foot {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 24px; align-items: end;
+  padding: 0 var(--pad) clamp(28px, 5vh, 56px);
+}
+.hero-lede {
+  max-width: 520px;
+  color: var(--dim);
+  font-size: clamp(.95rem, 1.6vw, 1.08rem);
+}
+.hero-lede strong { color: var(--paper); font-weight: 500; }
+.btn-row { display: flex; gap: 0; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 17px 30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .74rem; letter-spacing: .16em; text-transform: uppercase;
+  text-decoration: none;
+  background: none;           /* <button> elements have a default grey face — clear it so the theme bg shows */
+  border: 1px solid var(--line-strong);
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
+  transition: color .22s;
+  z-index: 1;
+}
+.btn + .btn { border-left: none; }
+.btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--hover);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform .24s cubic-bezier(.65,0,.35,1);
+  z-index: -1;
+}
+.btn:hover { color: var(--on-hover); border-color: var(--hover); }
+.btn:hover::before { transform: scaleY(1); }
+.btn .arr { transition: transform .22s; }
+.btn:hover .arr { transform: translateX(5px); }
+
+/* ============================================================
+   MARQUEE — KINETIC TYPE STRIPS
+   ⚠️ DO NOT "FIX" THIS MARQUEE. READ THIS FIRST.
+   ------------------------------------------------------------
+   Motion is driven by GSAP (js block below) — NOT CSS keyframes.
+   History: translateX(-50%) keyframes caused a ~1px seam pop,
+   and rAF/GSAP-modifier wraps showed a BLANK GAP in Chrome at
+   the seam. The JS builds 6 identical clones and the tween
+   travels exactly ONE measured chunk width per loop, so the
+   loop lands on pixels that already exist on screen — Chrome
+   cannot show a gap. Do not change the animation approach.
+
+   HARD RULES (violate any and the pop returns):
+   1. No @keyframes / animation on .marquee-track.
+   2. .marquee-chunk MUST keep `flex: 0 0 auto` and NO padding —
+      the .x separators are the only spacing source.
+   3. Both duplicated chunks must stay IDENTICAL in the HTML.
+   4. Keep the IntersectionObserver + resize re-tween + the
+      document.fonts.ready gating in the JS ticker.
+   ============================================================ */
+.marquee {
+  overflow: hidden;              /* clips the scrolling track */
+  contain: layout style paint;   /* isolates rendering → no raster re-eval */
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--ink);
+  padding: 14px 0;
+  position: relative;
+  z-index: 1;
+}
+.marquee.acid-strip { background: var(--acid); color: var(--on-acid); border-color: var(--acid); }
+.marquee-track {
+  display: flex; width: max-content;   /* JS rebuilds this from 6 identical clones */
+}
+.marquee-chunk {
+  display: flex; align-items: center;
+  flex: 0 0 auto;              /* CRITICAL: chunk must NEVER shrink or resize */
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.marquee-chunk .x {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .5em;             /* separator glyph — the ONLY source of spacing */
+  padding: 0 .55em;            /* (chunk itself has NO padding — see rules) */
+  opacity: .55;
+}
+
+/* ============ SECTIONS ============ */
+main { position: relative; z-index: 1; }
+section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margin: 0 auto; }
+
+.sec-head {
+  display: flex; align-items: baseline; gap: clamp(16px, 3vw, 36px);
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 22px;
+  margin-bottom: clamp(38px, 6vh, 64px);
+  flex-wrap: wrap;
+}
+.sec-index {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .16em;
+  color: var(--acid);
+}
+.sec-title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+}
+.sec-note {
+  margin-left: auto;
+  color: var(--dim);
+  max-width: 300px;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .08s; }
+.reveal-d2 { transition-delay: .16s; }
+.reveal-d3 { transition-delay: .24s; }
+
+/* ============ GALLERY ============ */
+.proj-row {
+  display: grid;
+  grid-template-columns: 150px 60px 1.05fr 1fr auto;
+  gap: clamp(16px, 3vw, 44px);
+  align-items: center;
+  padding: clamp(26px, 4vh, 42px) clamp(14px, 2vw, 28px);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  position: relative;
+  transition: background .22s, color .22s;
+}
+.proj-row:first-of-type { border-top: 1px solid var(--line-strong); }
+.proj-row::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--hover);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform .25s cubic-bezier(.65,0,.35,1);
+}
+.proj-row:hover { background: var(--hover); color: var(--on-hover); }
+.proj-row:hover::before { transform: scaleY(1); }
+.proj-thumb {
+  width: 100%; height: 92px;
+  border: 1px solid var(--line);
+  background: repeating-linear-gradient(45deg, transparent 0 10px, var(--thumb-stripe) 10px 20px);
+  display: grid; place-items: center;
+  transition: border-color .22s, background .22s;
+}
+.proj-thumb::after {
+  content: 'IMG / PENDING';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .58rem; letter-spacing: .14em;
+  color: var(--dim);
+  transition: color .22s;
+}
+.proj-row:hover .proj-thumb {
+  border-color: color-mix(in srgb, var(--on-hover) 50%, transparent);
+  background: repeating-linear-gradient(45deg, transparent 0 10px, color-mix(in srgb, var(--on-hover) 7%, transparent) 10px 20px);
+}
+.proj-row:hover .proj-thumb::after { color: color-mix(in srgb, var(--on-hover) 60%, transparent); }
+.proj-num {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line-strong);
+  transition: -webkit-text-stroke-color .22s;
+}
+.proj-row:hover .proj-num { -webkit-text-stroke-color: var(--on-hover); }
+.proj-title h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.35rem, 2.8vw, 2.1rem);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+.proj-tags {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dim);
+  transition: color .22s;
+}
+.proj-row:hover .proj-tags { color: color-mix(in srgb, var(--on-hover) 66%, transparent); }
+.proj-desc { color: var(--dim); font-size: .93rem; transition: color .22s; }
+.proj-row:hover .proj-desc { color: color-mix(in srgb, var(--on-hover) 78%, transparent); }
+.proj-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.proj-cta .arr { transition: transform .22s; }
+.proj-row:hover .proj-cta .arr { transform: translateX(6px); }
+
+/* COBALT + WIPEOUT: only the big Anton headings stay dark on hover —
+   all small text (tags, CTAs, sublinks, nav labels) turns neon yellow via --on-hover */
+html[data-theme="cobalt"] .proj-row:hover h3,
+html[data-theme="wipeout"] .proj-row:hover h3 {
+  color: var(--ink);
+}
+
+/* ============ CONTACT ============ */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 90px);
+}
+.contact-copy > p { color: var(--dim); margin-bottom: 18px; font-size: 1rem; }
+.contact-lines { margin-top: 34px; }
+.c-line {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: padding-left .22s;
+}
+.c-line:first-child { border-top: 1px solid var(--line); }
+.c-line:hover { padding-left: 10px; }
+.c-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .66rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim);
+}
+.c-value { font-weight: 500; font-size: .98rem; word-break: break-all; }
+.c-arrow { color: var(--acid); font-family: 'JetBrains Mono', monospace; }
+
+form.contact-form { border: 1px solid var(--line); padding: clamp(24px, 3vw, 40px); }
+.form-group { margin-bottom: 26px; }
+.form-group label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 10px;
+}
+.form-group label i { color: var(--acid); font-style: normal; }
+.form-group input, .form-group textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--paper);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  padding: 10px 2px;
+  outline: none;
+  resize: vertical;
+  transition: border-color .22s;
+  border-radius: 0;
+}
+.form-group input:focus, .form-group textarea:focus { border-bottom-color: var(--acid); }
+.form-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .74rem; letter-spacing: .06em;
+  min-height: 1.5em; margin-top: 14px;
+}
+.form-status.ok { color: var(--acid); }
+.form-status.err { color: var(--signal); }
+form .btn { width: 100%; justify-content: center; }
+
+/* ============ FOOTER ============ */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 26px var(--pad);
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  color: var(--dim);
+  position: relative; z-index: 1;
+}
+footer .mono a { color: var(--dim); text-decoration: none; }
+footer .mono a:hover { color: var(--acid); }
+
+.to-top {
+  position: fixed; bottom: 22px; right: 22px; z-index: 90;
+  width: 46px; height: 46px;
+  background: var(--ink);
+  border: 1px solid var(--line-strong);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  opacity: 0; pointer-events: none; transform: translateY(14px);
+  transition: .3s;
+}
+.to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+.to-top:hover { background: var(--hover); color: var(--on-hover); border-color: var(--hover); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1020px) {
+  .proj-row { grid-template-columns: 52px 1fr auto; }
+  .proj-thumb { display: none; }
+  .proj-desc { display: none; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .nav-links {
+    position: fixed; top: 53px; left: 0; right: 0;
+    flex-direction: column;
+    background: var(--mobile-nav-bg);
+    max-height: 0; overflow: hidden;
+    transition: max-height .35s ease;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-links.open { max-height: 420px; }
+  .nav-links a { padding: 16px var(--pad); border-left: none; border-top: 1px solid var(--line); }
+  .burger { display: block; }
+  .hero-foot { grid-template-columns: 1fr; }
+  .sec-note { margin-left: 0; }
+  .proj-row { grid-template-columns: 40px 1fr; padding: 22px 0; }
+  .proj-cta { grid-column: 2; }
+  .proj-title h3 { font-size: clamp(1.15rem, 4.6vw, 1.6rem); }
+  .c-line { grid-template-columns: 86px 1fr; }
+  .c-arrow { display: none; }
+}
+@media (max-width: 500px) {
+  .brand { padding: 12px 14px; gap: 10px; }
+  .brand-name { display: none; }
+  .theme-name { padding: 0 10px; }
+  .theme-toggle { padding: 0 12px; }
+  .burger { padding: 0 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-box" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- ============ TOP BAR ============ -->
+<header id="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">T—H</span>
+    <span class="brand-name">Terence <b>Honeyford</b></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#gallery"><sup>01</sup>Gallery</a></li>
+    <li><a href="#branding"><sup>02</sup>Branding</a></li>
+    <li><a href="#typography"><sup>03</sup>Typography</a></li>
+    <li><a href="#contact"><sup>04</sup>Contact</a></li>
+  </ul>
+  <div class="theme-wrap">
+    <span class="theme-name mono" id="themeName">TDR</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Change colour scheme" title="Change colour scheme">
+      <span class="sw sw-a"></span><span class="sw sw-b"></span>
+    </button>
+  </div>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" style="padding-left:0;padding-right:0;">
+    <div class="hero-meta mono">
+      <span>Folio / <b>DESIGN</b></span>
+      <span>Branding · <b>Editorial</b> · Type</span>
+      <span>Status / <b>Placeholder</b></span>
+    </div>
+
+    <div class="kinetic" aria-label="Graphic design portfolio">
+      <div class="k-line" aria-hidden="false">
+        <span class="k-letter">T</span><span class="k-letter">E</span><span class="k-letter">Z</span><span class="k-letter">Z</span>
+        <span class="k-acid">.</span>
+        <span class="k-small" style="margin-left:clamp(10px,3vw,40px)">Terence Honeyford<br>Graphic Design Portfolio</span>
+      </div>
+      <div class="k-line k-outline k-word-indent" aria-hidden="true">GRAPHIC DESIGN</div>
+      <div class="k-row" aria-hidden="true">
+        <div class="k-line">&&nbsp;<span class="k-acid">DESIGN</span>&nbsp;BUILDER</div>
+        <p class="k-small">Lorem ipsum dolor sit amet — consectetur adipiscing elit sed do eiusmod.</p>
+      </div>
+    </div>
+
+    <div class="hero-foot">
+      <p class="hero-lede">Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+      <div class="btn-row">
+        <a href="#gallery" class="btn">View gallery <span class="arr">→</span></a>
+        <a href="index.html" class="btn">Back to home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- kinetic strip -->
+  <div class="marquee acid-strip" aria-hidden="true">
+    <div class="marquee-track" data-marquee>
+      <div class="marquee-chunk">Lorem Ipsum<span class="x">✕</span>Dolor Sit Amet<span class="x">✕</span>Consectetur Adipiscing<span class="x">✕</span>Elit Sed Do Eiusmod<span class="x">✕</span>Tempor Incididunt<span class="x">✕</span></div>
+      <div class="marquee-chunk">Lorem Ipsum<span class="x">✕</span>Dolor Sit Amet<span class="x">✕</span>Consectetur Adipiscing<span class="x">✕</span>Elit Sed Do Eiusmod<span class="x">✕</span>Tempor Incididunt<span class="x">✕</span></div>
+    </div>
+  </div>
+
+  <!-- ============ GALLERY ============ -->
+  <section id="gallery">
+    <div class="sec-head reveal">
+      <span class="sec-index">01 /</span>
+      <h2 class="sec-title">Gallery</h2>
+      <p class="sec-note">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+
+    <a class="proj-row reveal" href="#contact">
+      <div class="proj-thumb" aria-hidden="true"></div>
+      <span class="proj-num">G1</span>
+      <div class="proj-title">
+        <h3>Lorem Ipsum Dolor</h3>
+        <span class="proj-tags">Branding · <span class="acid">Amet</span> · Consectetur</span>
+      </div>
+      <p class="proj-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <span class="proj-cta">View case <span class="arr">→</span></span>
+    </a>
+
+    <a class="proj-row reveal" href="#contact">
+      <div class="proj-thumb" aria-hidden="true"></div>
+      <span class="proj-num">G2</span>
+      <div class="proj-title">
+        <h3>Sed Do Eiusmod</h3>
+        <span class="proj-tags">Editorial · <span class="acid">Ipsum</span> · Tempor</span>
+      </div>
+      <p class="proj-desc">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <span class="proj-cta">View case <span class="arr">→</span></span>
+    </a>
+
+    <a class="proj-row reveal" href="#contact">
+      <div class="proj-thumb" aria-hidden="true"></div>
+      <span class="proj-num">G3</span>
+      <div class="proj-title">
+        <h3>Tempor Incididunt</h3>
+        <span class="proj-tags">Campaign · <span class="acid">Dolor</span> · Labore</span>
+      </div>
+      <p class="proj-desc">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+      <span class="proj-cta">View case <span class="arr">→</span></span>
+    </a>
+  </section>
+
+  <!-- kinetic strip -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" data-marquee>
+      <div class="marquee-chunk">Branding<span class="x">/</span>Editorial<span class="x">/</span>Typography<span class="x">/</span>Branding<span class="x">/</span>Editorial<span class="x">/</span>Typography<span class="x">/</span></div>
+      <div class="marquee-chunk">Branding<span class="x">/</span>Editorial<span class="x">/</span>Typography<span class="x">/</span>Branding<span class="x">/</span>Editorial<span class="x">/</span>Typography<span class="x">/</span></div>
+    </div>
+  </div>
+
+  <!-- ============ BRANDING ============ -->
+  <section id="branding">
+    <div class="sec-head reveal">
+      <span class="sec-index">02 /</span>
+      <h2 class="sec-title">Branding</h2>
+      <p class="sec-note">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+
+    <a class="proj-row reveal" href="#contact">
+      <div class="proj-thumb" aria-hidden="true"></div>
+      <span class="proj-num">B1</span>
+      <div class="proj-title">
+        <h3>Lorem Ipsum</h3>
+        <span class="proj-tags">Identity · <span class="acid">Amet</span> · Consectetur</span>
+      </div>
+      <p class="proj-desc">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <span class="proj-cta">View case <span class="arr">→</span></span>
+    </a>
+
+    <a class="proj-row reveal" href="#contact">
+      <div class="proj-thumb" aria-hidden="true"></div>
+      <span class="proj-num">B2</span>
+      <div class="proj-title">
+        <h3>Dolor Sit Amet</h3>
+        <span class="proj-tags">Logo · <span class="acid">Sed</span> · Eiusmod</span>
+      </div>
+      <p class="proj-desc">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+      <span class="proj-cta">View case <span class="arr">→</span></span>
+    </a>
+  </section>
+
+  <!-- ============ TYPOGRAPHY ============ -->
+  <section id="typography">
+    <div class="sec-head reveal">
+      <span class="sec-index">03 /</span>
+      <h2 class="sec-title">Typography</h2>
+      <p class="sec-note">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+
+    <a class="proj-row reveal" href="#contact">
+      <div class="proj-thumb" aria-hidden="true"></div>
+      <span class="proj-num">T1</span>
+      <div class="proj-title">
+        <h3>Lorem Ipsum Dolor Sit</h3>
+        <span class="proj-tags">Type · <span class="acid">Amet</span> · Consectetur</span>
+      </div>
+      <p class="proj-desc">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos.</p>
+      <span class="proj-cta">View case <span class="arr">→</span></span>
+    </a>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="sec-head reveal">
+      <span class="sec-index">04 /</span>
+      <h2 class="sec-title">Contact</h2>
+      <p class="sec-note">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-copy reveal">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>
+        <div class="contact-lines">
+          <a class="c-line" href="mailto:Terence.Honeyford@Outlook.com">
+            <span class="c-label">Email</span>
+            <span class="c-value">Terence.Honeyford@Outlook.com</span>
+            <span class="c-arrow">↗</span>
+          </a>
+          <a class="c-line" href="https://www.linkedin.com/in/terencehoneyford" target="_blank" rel="noopener noreferrer">
+            <span class="c-label">LinkedIn</span>
+            <span class="c-value">/in/terencehoneyford</span>
+            <span class="c-arrow">↗</span>
+          </a>
+          <a class="c-line" href="https://github.com/Tezeroth" target="_blank" rel="noopener noreferrer">
+            <span class="c-label">GitHub</span>
+            <span class="c-value">github.com/Tezeroth</span>
+            <span class="c-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <form class="contact-form reveal reveal-d1" id="contactForm" novalidate>
+        <div class="form-group">
+          <label for="name">Your Name <i>*</i></label>
+          <input type="text" id="name" name="name" placeholder="Jane Doe" required minlength="2" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address <i>*</i></label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="message">Message <i>*</i></label>
+          <textarea id="message" name="message" rows="5" placeholder="Tell me about your project…" required minlength="10"></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message <span class="arr">→</span></button>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="mono">© <span id="year"></span> Tezz / Terence Honeyford</span>
+  <span class="mono">Lorem ipsum dolor sit amet — placeholder</span>
+  <span class="mono">
+    <a href="index.html">BACK TO HOME</a> /
+    <a href="cv.html">CV</a>
+  </span>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<!-- GSAP core — local file (no CDN). 72KB, loads from disk in ~1ms. -->
+<script src="gsap.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------- Colour scheme cycler ---------- */
+  const THEMES = ['tdr', 'volt', 'ember', 'mint', 'cobalt', 'rose', 'paper', 'sky', 'earth', 'retro', 'pastelpurple', 'neon', 'cyber', 'wipeout', 'blueprint', 'hazard', 'terminal', 'sumi'];
+  let themeIndex = 0;
+  try {
+    const saved = localStorage.getItem('tezz-theme');
+    if (saved && THEMES.includes(saved)) themeIndex = THEMES.indexOf(saved);
+  } catch (e) { /* storage unavailable — default theme */ }
+
+  function applyTheme() {
+    const t = THEMES[themeIndex];
+    if (t === 'tdr') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeName').textContent = t === 'pastelpurple' ? 'PASTEL PURPLE' : t.toUpperCase();
+    try { localStorage.setItem('tezz-theme', t); } catch (e) { /* ignore */ }
+  }
+  applyTheme();
+
+  /* ============================================================
+     MARQUEE TICKER — GSAP "CLONE THE ITEM" (local gsap.min.js)
+     ------------------------------------------------------------
+     WHY THIS TECHNIQUE:
+     The user's Chrome showed the seam as a BLANK GAP: text scrolls
+     off left, the area goes empty, then the next copy "pops in".
+     The previous approaches (translateX(-50%) keyframes, rAF
+     wrap-by-addition, GSAP modifiers `x % chunkWidth`) each still
+     produced the gap in Chrome because the compositor does not
+     re-render wrapped content in the same frame as the transform
+     wrap. GSAP's documented remedy is "clone the item": make the
+     track long enough that the tween NEVER wraps — it travels
+     exactly ONE measured chunk width and repeats, landing exactly
+     where the next identical clone begins. Loop-point pixels are
+     already on screen and bit-for-bit identical → no gap possible.
+     ------------------------------------------------------------
+     HOW IT WORKS:
+     - buildTrack(): clones ONE chunk's HTML into 6 identical
+       .marquee-chunk divs (guarded by `data-cloned` so it runs once).
+     - oneChunkWidth(): measures the real rendered first clone width
+       (fractional values are fine — the tween travels that exact px).
+     - The tween: x 0 → -w (w = measured width), duration = w/112
+       → constant 112px/s, ease none, repeat -1. After it ends it
+       restarts at the identical pixels of the next clone — invisible.
+     ------------------------------------------------------------
+     RULES — do not violate these or the bug returns:
+     1. gsap.min.js MUST stay in the project root (no CDN).
+     2. Never replace this with a CSS @keyframes animation.
+     3. Never remove `flex: 0 0 auto` from .marquee-chunk or add
+        padding — separators .x are the only spacing.
+     4. The track is rebuilt from clones of ONE chunk; the HTML
+        source chunk must stay canonical.
+     5. Keep the IntersectionObserver, resize re-tween, hover pause
+        and document.fonts.ready gating.
+     6. Keep cv.html's ticker identical.
+     ============================================================ */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.marquee').forEach(function (marquee) {
+    const track = marquee.querySelector('.marquee-track');
+    let tween = null;
+
+    /* Build the track from 6 identical clones of ONE chunk.
+       This is the GSAP-docs "clone the item" technique — the tween only
+       ever travels exactly ONE measured chunk width, so at the loop point
+       the pixels are bit-for-bit identical. No modifiers, no wrapping,
+       no compositor quirk → Chrome cannot ever show a blank gap. */
+    function buildTrack() {
+      if (track.dataset.cloned) return;
+      const source = track.querySelector('.marquee-chunk');
+      const html = source.innerHTML;
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 6; i++) {
+        const clone = document.createElement('div');
+        clone.className = 'marquee-chunk';
+        clone.innerHTML = html;
+        frag.appendChild(clone);
+      }
+      track.innerHTML = '';
+      track.appendChild(frag);
+      track.dataset.cloned = '1';
+    }
+
+    function oneChunkWidth() {
+      buildTrack();
+      return track.querySelector('.marquee-chunk').getBoundingClientRect().width;
+    }
+
+    function buildTween() {
+      if (reduceMotion) return;
+      if (typeof gsap === 'undefined') return; // fail-safe: never break page JS if gsap.min.js is missing
+      if (tween) tween.kill();
+      const w = oneChunkWidth();
+      if (!w) return;
+      tween = gsap.to(track, {
+        x: -w,                  // travel exactly ONE chunk width per loop
+        duration: w / 112,      // constant 112px/s regardless of chunk width
+        ease: 'none',
+        repeat: -1
+      });
+    }
+
+    const marqueeIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          if (!tween) buildTween();
+          if (tween) tween.play();
+        } else if (tween) {
+          tween.pause();
+        }
+      });
+    }, { threshold: 0 });
+    marqueeIO.observe(marquee);
+
+    marquee.addEventListener('mouseenter', function () { if (tween) tween.pause(); });
+    marquee.addEventListener('mouseleave', function () { if (tween) tween.play(); });
+    window.addEventListener('resize', buildTween);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(buildTween).catch(buildTween);
+    } else {
+      buildTween();
+    }
+  });
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    themeIndex = (themeIndex + 1) % THEMES.length;
+    applyTheme();
+  });
+
+  /* ---------- Nav state ---------- */
+  const navLinks = document.getElementById('navLinks');
+  const anchors = Array.from(navLinks.querySelectorAll('a'));
+  const toTop = document.getElementById('toTop');
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+
+  function onScroll() {
+    toTop.classList.toggle('show', window.scrollY > 600);
+    let current = sections[0] && sections[0].id;
+    for (const s of sections) {
+      if (window.scrollY >= s.offsetTop - 160) current = s.id;
+    }
+    anchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ---------- Mobile menu ---------- */
+  const burger = document.getElementById('burger');
+  burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.addEventListener('click', e => {
+    if (e.target.closest('a')) navLinks.classList.remove('open');
+  });
+
+  /* ---------- Custom cursor (square, rotates on hover) ---------- */
+  const dot = document.querySelector('.cursor-dot');
+  const box = document.querySelector('.cursor-box');
+  if (window.matchMedia('(hover: hover)').matches) {
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+    }, { passive: true });
+    (function loop() {
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      const hovering = box.classList.contains('hovering');
+      box.style.left = rx + 'px';
+      box.style.top = ry + 'px';
+      if (!hovering) box.style.transform = 'translate(-50%,-50%)';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button, input, textarea, .k-letter, .tok').forEach(el => {
+      el.addEventListener('mouseenter', () => box.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => box.classList.remove('hovering'));
+    });
+  } else {
+    dot.remove(); box.remove();
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.classList.add('visible');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ---------- Contact form validation (same mailto flow as index.html) ---------- */
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    status.className = 'form-status';
+
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const message = form.message.value.trim();
+
+    function fail(msg) {
+      status.classList.add('err');
+      status.textContent = '// ERROR: ' + msg;
+    }
+
+    if (name.length < 2) return fail('Please enter your name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Please enter a valid email address.');
+    if (message.length < 10) return fail('Message should be at least 10 characters.');
+
+    status.classList.add('ok');
+    status.textContent = '// OK — opening your email client…';
+
+    const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
+    const body = encodeURIComponent(`${message}
+
+— ${name} (${email})`);
+    window.location.href = `mailto:Terence.Honeyford@Outlook.com?subject=${subject}&body=${body}`;
+
+    form.reset();
+    setTimeout(() => { status.textContent = ''; status.className = 'form-status'; }, 6000);
+  });
+
+})();
+</script>
+
+<script>
+  /* ---------- First-visit theme: WIPEOUT ---------- */
+  try {
+    if (!localStorage.getItem('tezz-theme')) {
+      localStorage.setItem('tezz-theme', 'wipeout');
+      document.documentElement.setAttribute('data-theme', 'wipeout');
+      const nameEl = document.getElementById('themeName');
+      if (nameEl) nameEl.textContent = 'WIPEOUT';
+    }
+  } catch (e) { /* ignore */ }
+</script>
+</body>
+</html>
