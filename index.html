@@ -536,9 +536,18 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   margin-bottom: 0;
   min-height: 0;
   text-align: left;
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--acid) 40%, transparent);
+  padding: 14px 16px;
 }
 .focus-cell h3.acc-head:focus-visible { outline: 1px dashed var(--acid); outline-offset: 4px; }
-.focus-cell h3.acc-head:hover .acc-plus { color: var(--acid); }
+/* focus headings also fill on hover — explicit specificity to beat the h3 rest rule */
+.focus-cell h3.acc-head.fill-btn:hover {
+  color: var(--on-hover);
+  border-color: var(--hover);
+  border-style: solid;
+}
+.focus-cell h3.acc-head.fill-btn:hover .acc-plus { color: var(--on-hover); }
 .focus-cell .acc-body { color: var(--dim); font-size: .93rem; margin-top: 16px; }
 .focus-cell .acc-body p { margin-bottom: 14px; }
 .focus-cell .acc-body .tick-list { margin-bottom: 14px; }
@@ -1077,7 +1086,7 @@ footer .mono a:hover { color: var(--acid); }
     </div>
     <div class="focus-grid">
       <div class="focus-cell reveal acc">
-        <h3 class="acc-head" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-1">
+        <h3 class="acc-head fill-btn" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-1">
           <span>Secure Web Dev & Standards</span>
           <span class="acc-plus" aria-hidden="true">+</span>
         </h3>
@@ -1087,7 +1096,7 @@ footer .mono a:hover { color: var(--acid); }
         </div>
       </div>
       <div class="focus-cell reveal reveal-d1 acc">
-        <h3 class="acc-head" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-2">
+        <h3 class="acc-head fill-btn" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-2">
           <span>AI-Assisted Development</span>
           <span class="acc-plus" aria-hidden="true">+</span>
         </h3>
@@ -1104,7 +1113,7 @@ footer .mono a:hover { color: var(--acid); }
         </div>
       </div>
       <div class="focus-cell reveal reveal-d2 acc">
-        <h3 class="acc-head" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-3">
+        <h3 class="acc-head fill-btn" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-3">
           <span>Deployment & Hosting</span>
           <span class="acc-plus" aria-hidden="true">+</span>
         </h3>
