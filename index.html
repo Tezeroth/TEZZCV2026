@@ -356,8 +356,9 @@ header {
 .btn:hover .arr { transform: translateX(5px); }
 
 /* ============ HERO CTA GLITCH ============ */
-/* Subtle periodic RGB-split glitch on the hero buttons so they read as
-   clickable. Theme-aware (uses --acid / --signal). Disabled for reduced motion. */
+/* periodic RGB-split glitch + micro-jitter on the hero buttons so they
+   clearly read as clickable. Theme-aware (uses --acid / --signal).
+   Disabled for reduced motion. */
 .btn-txt {
   position: relative;
   display: inline-block;
@@ -374,32 +375,51 @@ header {
 .btn-txt::before { color: var(--acid); }
 .btn-txt::after  { color: var(--signal); }
 
-.hero-foot .btn .btn-txt::before { animation: hero-glitch-l 4.5s linear infinite; }
-.hero-foot .btn .btn-txt::after  { animation: hero-glitch-r 4.5s linear infinite; }
+.hero-foot .btn { animation: hero-btn-jitter 2.4s linear infinite; }
+.hero-foot .btn .btn-txt::before { animation: hero-glitch-l 2.4s linear infinite; }
+.hero-foot .btn .btn-txt::after  { animation: hero-glitch-r 2.4s linear infinite; }
+.hero-foot .btn:hover,
 .hero-foot .btn:hover .btn-txt::before,
-.hero-foot .btn:hover .btn-txt::after { animation-duration: 1.6s; }
+.hero-foot .btn:hover .btn-txt::after { animation-duration: 1s; }
 
-/* the glitch fires for ~0.15s every 4.5s — alive, not distracting */
+/* whole-button micro-jitter during the burst window — the clearest "click me" cue */
+@keyframes hero-btn-jitter {
+  0%, 78%    { transform: translate(0, 0); }
+  80%        { transform: translate(2px, 0); }
+  82%        { transform: translate(-2px, 1px); }
+  84%        { transform: translate(1px, -1px); }
+  86%        { transform: translate(-2px, 0); }
+  88%        { transform: translate(2px, 1px); }
+  90%, 100%  { transform: translate(0, 0); }
+}
+
+/* multi-slice RGB-split burst: ~0.25s of visible glitch every 2.4s */
 @keyframes hero-glitch-l {
-  0%, 93%   { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
-  93.2%     { opacity: .9; transform: translate(-2px, 1px); clip-path: inset(0 0 55% 0); }
-  93.6%     { opacity: .9; transform: translate(1px, 0); clip-path: inset(25% 0 45% 0); }
-  94%       { opacity: .9; transform: translate(-1px, -1px); clip-path: inset(60% 0 5% 0); }
-  94.4%     { opacity: .9; transform: translate(2px, 0); clip-path: inset(10% 0 70% 0); }
-  96%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  0%, 78%    { opacity: 0; transform: translate(0, 0) skewX(0); clip-path: inset(0 0 0 0); }
+  80%        { opacity: 1; transform: translate(-3px, 1px) skewX(-2deg); clip-path: inset(0 0 55% 0); }
+  82%        { opacity: 1; transform: translate(3px, 0) skewX(2deg); clip-path: inset(20% 0 60% 0); }
+  84%        { opacity: 1; transform: translate(-4px, -1px) skewX(-1deg); clip-path: inset(55% 0 5% 0); }
+  86%        { opacity: 1; transform: translate(2px, 1px) skewX(1deg); clip-path: inset(10% 0 75% 0); }
+  88%        { opacity: 1; transform: translate(-2px, 0) skewX(-2deg); clip-path: inset(35% 0 40% 0); }
+  90%, 100%  { opacity: 0; transform: translate(0, 0) skewX(0); clip-path: inset(0 0 0 0); }
 }
 @keyframes hero-glitch-r {
-  0%, 93%   { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
-  93.2%     { opacity: .9; transform: translate(2px, -1px); clip-path: inset(70% 0 10% 0); }
-  93.6%     { opacity: .9; transform: translate(-1px, 1px); clip-path: inset(5% 0 75% 0); }
-  94%       { opacity: .9; transform: translate(1px, 0); clip-path: inset(40% 0 35% 0); }
-  94.4%     { opacity: .9; transform: translate(-2px, 0); clip-path: inset(55% 0 15% 0); }
-  96%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  0%, 78%    { opacity: 0; transform: translate(0, 0) skewX(0); clip-path: inset(0 0 0 0); }
+  80%        { opacity: 1; transform: translate(3px, -1px) skewX(2deg); clip-path: inset(70% 0 10% 0); }
+  82%        { opacity: 1; transform: translate(-3px, 1px) skewX(-2deg); clip-path: inset(5% 0 75% 0); }
+  84%        { opacity: 1; transform: translate(2px, 0) skewX(1deg); clip-path: inset(40% 0 35% 0); }
+  86%        { opacity: 1; transform: translate(-2px, -1px) skewX(-1deg); clip-path: inset(15% 0 65% 0); }
+  88%        { opacity: 1; transform: translate(3px, 1px) skewX(2deg); clip-path: inset(50% 0 25% 0); }
+  90%, 100%  { opacity: 0; transform: translate(0, 0) skewX(0); clip-path: inset(0 0 0 0); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-foot .btn,
   .hero-foot .btn .btn-txt::before,
   .hero-foot .btn .btn-txt::after {
     animation: none !important;
+  }
+  .hero-foot .btn .btn-txt::before,
+  .hero-foot .btn .btn-txt::after {
     display: none;
   }
 }
