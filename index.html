@@ -375,12 +375,26 @@ header {
 .btn-txt::before { color: var(--acid); }
 .btn-txt::after  { color: var(--signal); }
 
-.hero-foot .btn { animation: hero-btn-jitter 2.4s linear infinite; }
-.hero-foot .btn .btn-txt::before { animation: hero-glitch-l 2.4s linear infinite; }
-.hero-foot .btn .btn-txt::after  { animation: hero-glitch-r 2.4s linear infinite; }
-.hero-foot .btn:hover,
-.hero-foot .btn:hover .btn-txt::before,
-.hero-foot .btn:hover .btn-txt::after { animation-duration: 1s; }
+.hero-foot .btn:has(.btn-txt),
+.about-copy .avail,
+.about-details .acc-head,
+.further .acc-head,
+#contactForm .btn:has(.btn-txt) {
+  animation: hero-btn-jitter 2.4s linear infinite;
+}
+.hero-meta .pulse {
+  animation: pulse 2.8s ease-in-out infinite, hero-btn-jitter 2.4s linear infinite;
+}
+.btn-txt::before { animation: hero-glitch-l 2.4s linear infinite; }
+.btn-txt::after  { animation: hero-glitch-r 2.4s linear infinite; }
+.hero-foot .btn:hover:has(.btn-txt),
+.about-copy .avail:hover,
+.about-details .acc-head:hover,
+.further .acc-head:hover,
+#contactForm .btn:hover:has(.btn-txt),
+.hero-meta .pulse:hover,
+.btn-txt:hover::before,
+.btn-txt:hover::after { animation-duration: 1s; }
 
 /* whole-button micro-jitter during the burst window — the clearest "click me" cue */
 @keyframes hero-btn-jitter {
@@ -413,13 +427,18 @@ header {
   90%, 100%  { opacity: 0; transform: translate(0, 0) skewX(0); clip-path: inset(0 0 0 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-foot .btn,
-  .hero-foot .btn .btn-txt::before,
-  .hero-foot .btn .btn-txt::after {
+  .hero-foot .btn:has(.btn-txt),
+  .hero-meta .pulse,
+  .about-copy .avail,
+  .about-details .acc-head,
+  .further .acc-head,
+  #contactForm .btn:has(.btn-txt),
+  .btn-txt::before,
+  .btn-txt::after {
     animation: none !important;
   }
-  .hero-foot .btn .btn-txt::before,
-  .hero-foot .btn .btn-txt::after {
+  .btn-txt::before,
+  .btn-txt::after {
     display: none;
   }
 }
@@ -583,7 +602,7 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   padding: 8px 14px;
   text-decoration: none;
 }
-.hero-meta .pulse:hover { animation: none; }
+.hero-meta .pulse:hover { animation: hero-btn-jitter 1s linear infinite; }
 
 .trait-list { list-style: none; }
 .trait-list li {
@@ -1174,7 +1193,7 @@ footer .mono a:hover { color: var(--acid); }
     <div class="hero-meta mono">
       <span>Folio / <b>2026</b></span>
       <span>Web Dev · <b>WebXR</b> · 3D</span>
-      <span>Status / <a class="pulse fill-btn" href="#contact" title="Go to contact">Available for work</a></span>
+      <span>Status / <a class="pulse fill-btn" href="#contact" title="Go to contact"><span class="btn-txt" data-text="Available for work">Available for work</span></a></span>
     </div>
 
     <div class="kinetic" aria-label="Tezz — web developer and XR">
@@ -1219,7 +1238,7 @@ footer .mono a:hover { color: var(--acid); }
         <p class="pull">I build custom websites and web applications — booking systems, invoicing, e-commerce and interactive WebXR experiences — combining immersive 3D environments with modern web technology.</p>
         <div class="about-details acc">
           <button class="acc-head fill-btn" type="button" aria-expanded="false" aria-controls="about-details-body">
-            <span>Further Details</span>
+            <span class="btn-txt" data-text="Further Details">Further Details</span>
             <span class="acc-plus" aria-hidden="true">+</span>
           </button>
           <div class="acc-body" id="about-details-body">
@@ -1229,7 +1248,7 @@ footer .mono a:hover { color: var(--acid); }
           </div>
         </div>
         <a class="avail fill-btn" href="#contact">
-          <span>Available for freelance & technical projects</span>
+          <span class="btn-txt" data-text="Available for freelance & technical projects">Available for freelance & technical projects</span>
           <span class="acc-plus" aria-hidden="true">+</span>
         </a>
       </div>
@@ -1544,7 +1563,7 @@ footer .mono a:hover { color: var(--acid); }
       <div class="contact-copy reveal">
         <div class="further acc">
           <button class="acc-head fill-btn" type="button" aria-expanded="false" aria-controls="further-details-body">
-            <span>Further Details</span>
+            <span class="btn-txt" data-text="Further Details">Further Details</span>
             <span class="acc-plus" aria-hidden="true">+</span>
           </button>
           <div class="acc-body" id="further-details-body">
@@ -1591,7 +1610,7 @@ footer .mono a:hover { color: var(--acid); }
           <label for="message">Message <i>*</i></label>
           <textarea id="message" name="message" rows="5" placeholder="Tell me about your project…" required minlength="10"></textarea>
         </div>
-        <button type="submit" class="btn">Send Message <span class="arr">→</span></button>
+        <button type="submit" class="btn"><span class="btn-txt" data-text="Send Message">Send Message</span> <span class="arr">→</span></button>
         <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
       </form>
     </div>
