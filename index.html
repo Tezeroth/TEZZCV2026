@@ -563,6 +563,8 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
 .proj-row:hover { background: var(--hover); color: var(--on-hover); }
 .proj-row:hover::before { transform: scaleY(1); }
 .proj-thumb {
+  position: relative;          /* anchor for the absolutely-fitted screenshot img */
+  overflow: hidden;            /* nothing can ever bleed out of the frame into text */
   width: 100%; height: 92px;
   border: 1px solid var(--line);
   background: repeating-linear-gradient(45deg, transparent 0 10px, var(--thumb-stripe) 10px 20px);
@@ -576,8 +578,12 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   color: var(--dim);
   transition: color .22s;
 }
-/* screenshot thumbs (replaces IMG / PENDING) */
+/* screenshot thumbs (replaces IMG / PENDING) — absolutely fitted to the
+   .proj-thumb frame so every image renders the exact same box size and
+   can never overflow into the title/CTA text below */
 .proj-thumb img {
+  position: absolute;
+  top: 0; left: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
@@ -768,6 +774,8 @@ footer .mono a:hover { color: var(--acid); }
   .burger { display: block; }
   .hero-foot { grid-template-columns: 1fr; }
   .sec-note { margin-left: 0; }
+  /* hero title breathing room when the kinetic lines stack on phones */
+  .kinetic { gap: 8px; }
   /* clean stacked card on phones: num + title/CTA on top, sublinks as an
      indented full-width block beneath a dashed hairline (design rule) */
   .proj-row { grid-template-columns: 40px 1fr; padding: 22px 0; }
