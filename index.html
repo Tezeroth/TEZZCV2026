@@ -355,6 +355,55 @@ header {
 .btn .arr { transition: transform .22s; }
 .btn:hover .arr { transform: translateX(5px); }
 
+/* ============ HERO CTA GLITCH ============ */
+/* Subtle periodic RGB-split glitch on the hero buttons so they read as
+   clickable. Theme-aware (uses --acid / --signal). Disabled for reduced motion. */
+.btn-txt {
+  position: relative;
+  display: inline-block;
+}
+.btn-txt::before,
+.btn-txt::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0;
+}
+.btn-txt::before { color: var(--acid); }
+.btn-txt::after  { color: var(--signal); }
+
+.hero-foot .btn .btn-txt::before { animation: hero-glitch-l 4.5s linear infinite; }
+.hero-foot .btn .btn-txt::after  { animation: hero-glitch-r 4.5s linear infinite; }
+.hero-foot .btn:hover .btn-txt::before,
+.hero-foot .btn:hover .btn-txt::after { animation-duration: 1.6s; }
+
+/* the glitch fires for ~0.15s every 4.5s — alive, not distracting */
+@keyframes hero-glitch-l {
+  0%, 93%   { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  93.2%     { opacity: .9; transform: translate(-2px, 1px); clip-path: inset(0 0 55% 0); }
+  93.6%     { opacity: .9; transform: translate(1px, 0); clip-path: inset(25% 0 45% 0); }
+  94%       { opacity: .9; transform: translate(-1px, -1px); clip-path: inset(60% 0 5% 0); }
+  94.4%     { opacity: .9; transform: translate(2px, 0); clip-path: inset(10% 0 70% 0); }
+  96%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+}
+@keyframes hero-glitch-r {
+  0%, 93%   { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  93.2%     { opacity: .9; transform: translate(2px, -1px); clip-path: inset(70% 0 10% 0); }
+  93.6%     { opacity: .9; transform: translate(-1px, 1px); clip-path: inset(5% 0 75% 0); }
+  94%       { opacity: .9; transform: translate(1px, 0); clip-path: inset(40% 0 35% 0); }
+  94.4%     { opacity: .9; transform: translate(-2px, 0); clip-path: inset(55% 0 15% 0); }
+  96%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-foot .btn .btn-txt::before,
+  .hero-foot .btn .btn-txt::after {
+    animation: none !important;
+    display: none;
+  }
+}
+
 /* ============================================================
    MARQUEE — KINETIC TYPE STRIPS
    ⚠️ DO NOT "FIX" THIS MARQUEE. READ THIS FIRST.
@@ -1124,8 +1173,8 @@ footer .mono a:hover { color: var(--acid); }
     <div class="hero-foot">
       <p class="hero-lede">Freelance <strong>web developer</strong> building custom websites and web applications — <strong>booking systems</strong>, <strong>invoicing</strong> and <strong>e-commerce</strong> — plus interactive <strong>WebXR experiences</strong>, built with secure, maintainable and AI-assisted workflows.</p>
       <div class="btn-row">
-        <a href="#projects" class="btn">View projects <span class="arr">→</span></a>
-        <a href="cv.html" class="btn">Full CV</a>
+        <a href="#projects" class="btn"><span class="btn-txt" data-text="View projects">View projects</span> <span class="arr">→</span></a>
+        <a href="cv.html" class="btn"><span class="btn-txt" data-text="Full CV">Full CV</span></a>
       </div>
     </div>
   </section>
