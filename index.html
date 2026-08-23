@@ -402,10 +402,29 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   font-family: 'JetBrains Mono', monospace;
   font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
   color: var(--acid);
-  display: inline-block;
+  display: inline-flex; align-items: center;
   border: 1px dashed color-mix(in srgb, var(--acid) 50%, transparent);
   padding: 10px 16px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: color .22s;
+  z-index: 1;
 }
+/* the availability pill fills bottom-to-top exactly like the .btn ("Send Message") buttons */
+.about-copy .avail::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--hover);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform .24s cubic-bezier(.65,0,.35,1);
+  z-index: -1;
+}
+.about-copy .avail:hover { color: var(--on-hover); border-color: var(--hover); border-style: solid; }
+.about-copy .avail:hover::before { transform: scaleY(1); }
+.about-copy .avail:focus-visible { outline: 1px dashed var(--acid); outline-offset: 3px; }
 
 .trait-list { list-style: none; }
 .trait-list li {
@@ -1000,7 +1019,7 @@ footer .mono a:hover { color: var(--acid); }
         <p>I recently completed a <strong>Level 3 Certificate in Coding Practices</strong>, and I'm continuing to build on that — developing my skills in secure web development, application hardening and production deployment. My current focus is preparing web applications for commercial payment integration, which involves investigating security standards and applying secure development practices throughout.</p>
         <p>Alongside this, I'm studying a <strong>Level 3 qualification in Cybersecurity</strong>, with a particular focus on the <strong>OWASP principles</strong> — the Open Worldwide Application Security Project's industry-standard framework, best known for its Top 10 catalogue of the most critical web application security risks and the defensive practices used to mitigate them. This study feeds directly into how I approach authentication, data protection and application hardening in my development work.</p>
         <p>I also actively research AI-assisted software development — including Retrieval-Augmented Generation (RAG), Model Context Protocol (MCP), context engineering and sequential multi-agent workflows. My aim is to use AI as a development tool while retaining human oversight of architecture, security, testing and code quality.</p>
-        <span class="avail">● Available for freelance & technical projects</span>
+        <a class="avail" href="#contact">● Available for freelance & technical projects</a>
       </div>
       <ul class="trait-list">
         <li class="reveal">
