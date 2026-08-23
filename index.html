@@ -207,6 +207,10 @@ header {
 }
 .hero-meta span b { color: var(--acid); font-weight: 400; }
 
+/* status indicator — slow attention pulse (disabled for reduced-motion below) */
+.pulse { animation: pulse 2.8s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
 .kinetic {
   flex: 1;
   display: flex; flex-direction: column; justify-content: center;
@@ -422,6 +426,15 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
 }
 .trait-list p { color: var(--dim); font-size: .92rem; }
 
+/* typewriter caret while the About A/B/C traits are being typed out */
+.trait-list li.typing p::after {
+  content: '▍';
+  margin-left: 2px;
+  color: var(--acid);
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink { 50% { opacity: 0; } }
+
 /* ============ FOCUS ============ */
 .focus-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -589,6 +602,10 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   display: block;
   transition: opacity .22s;
 }
+/* 3D model render: the subject sits high in the source image, so the banner's
+   centred cover-crop clips the robot's head — nudge the crop down to show it.
+   object-position 0% = top of source image. Adjust the % to taste. */
+.proj-thumb img.th-3d { object-position: center 10%; }
 .proj-thumb.has-img::after { display: none; }
 .proj-row:hover .proj-thumb img { opacity: .55; }
 .proj-row:hover .proj-thumb {
@@ -803,6 +820,7 @@ footer .mono a:hover { color: var(--acid); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .pulse { animation: none !important; }
   html { scroll-behavior: auto; }
 }
 </style>
@@ -843,7 +861,7 @@ footer .mono a:hover { color: var(--acid); }
     <div class="hero-meta mono">
       <span>Folio / <b>2026</b></span>
       <span>Web Dev · <b>WebXR</b> · 3D</span>
-      <span>Status / <b>Available for work</b></span>
+      <span>Status / <b class="pulse">Available for work</b></span>
     </div>
 
     <div class="kinetic" aria-label="Tezz — web developer and XR">
@@ -1102,7 +1120,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="https://sketchfab.com/Tezz" target="_blank" rel="noopener noreferrer">
-      <div class="proj-thumb has-img" aria-hidden="true"><img src="Assets/3DmodelPortfolio.png" alt="3D model portfolio"></div>
+      <div class="proj-thumb has-img" aria-hidden="true"><img src="Assets/3DmodelPortfolio.png" alt="3D model portfolio" class="th-3d"></div>
       <span class="proj-num">P3</span>
       <div class="proj-title">
         <h3>3D Model Portfolio</h3>
@@ -1452,6 +1470,41 @@ footer .mono a:hover { color: var(--acid); }
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ---------- About trait typewriter (A / B / C) ---------- */
+  if (!reduceMotion) {
+    const typeSpeed = 28;
+    const traitIO = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        traitIO.unobserve(en.target);
+        const h3 = en.target.querySelector('h3');
+        const p = en.target.querySelector('p');
+        if (!h3 || !p) return;
+        const fullH3 = h3.textContent;
+        const fullP = p.textContent;
+        h3.textContent = '';
+        p.textContent = '';
+        en.target.classList.add('typing');
+        let i = 0;
+        (function typeH3() {
+          h3.textContent = fullH3.slice(0, i);
+          if (i < fullH3.length) { i++; setTimeout(typeH3, typeSpeed); }
+          else {
+            setTimeout(function typeP() {
+              let j = 0;
+              (function tickP() {
+                p.textContent = fullP.slice(0, j);
+                if (j < fullP.length) { j++; setTimeout(tickP, typeSpeed); }
+                else { en.target.classList.remove('typing'); }
+              })();
+            }, 150);
+          }
+        })();
+      });
+    }, { threshold: 0.35 });
+    document.querySelectorAll('.trait-list li').forEach(li => traitIO.observe(li));
+  }
 
   /* ---------- Contact form validation ---------- */
   const form = document.getElementById('contactForm');
