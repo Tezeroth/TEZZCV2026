@@ -467,6 +467,58 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* ============ ACCORDION (focus cells + contact further details) ============ */
+.acc-body { display: none; }
+.acc.open .acc-body { display: block; }
+.acc-head {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+.acc-plus {
+  flex: 0 0 auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--signal);
+  transition: transform .25s cubic-bezier(.65,0,.35,1);
+}
+.acc.open .acc-plus { transform: rotate(45deg); }
+/* typewriter caret while the accordion body is being typed out */
+.acc.typing .acc-body::after {
+  content: '▍';
+  margin-left: 2px;
+  color: var(--acid);
+  animation: caret-blink 1s steps(1) infinite;
+}
+/* focus cells — headings become the dropdown triggers */
+.focus-cell h3.acc-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 0;
+  min-height: 0;
+  text-align: left;
+}
+.focus-cell h3.acc-head:focus-visible { outline: 1px dashed var(--acid); outline-offset: 4px; }
+.focus-cell h3.acc-head:hover .acc-plus { color: var(--acid); }
+.focus-cell .acc-body { color: var(--dim); font-size: .93rem; margin-top: 16px; }
+.focus-cell .acc-body p { margin-bottom: 14px; }
+.focus-cell .acc-body .tick-list { margin-bottom: 14px; }
+/* contact "further details" dropdown */
+.further { border-top: 1px solid var(--line-strong); }
+.further .acc-head {
+  background: none; border: none; padding: 18px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--acid);
+  text-align: left;
+}
+.further .acc-head:hover .acc-plus { color: var(--acid); }
+.further .acc-body { color: var(--dim); padding-bottom: 22px; }
+.further .acc-body p { margin-bottom: 14px; }
+
 /* ============ SKILLS ============ */
 .skill-block { border-bottom: 1px solid var(--line); }
 .skill-block:first-of-type { border-top: 1px solid var(--line); }
@@ -980,32 +1032,47 @@ footer .mono a:hover { color: var(--acid); }
       <p class="sec-note">What I'm actively building and studying right now.</p>
     </div>
     <div class="focus-grid">
-      <div class="focus-cell reveal">
-        <h3>Secure Web Dev & Standards</h3>
-        <p>Developing and hardening web applications with a focus on secure authentication, authorisation, data protection, client/server security and preparation for commercial payment integration, including PayPal.</p>
-        <p>Completed Level 3 Certificate in Coding Practices — applying coding standards, maintainability, documentation and structured development practice across personal projects.</p>
+      <div class="focus-cell reveal acc">
+        <h3 class="acc-head" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-1">
+          <span>Secure Web Dev & Standards</span>
+          <span class="acc-plus" aria-hidden="true">+</span>
+        </h3>
+        <div class="acc-body" id="focus-body-1">
+          <p>Developing and hardening web applications with a focus on secure authentication, authorisation, data protection, client/server security and preparation for commercial payment integration, including PayPal.</p>
+          <p>Completed Level 3 Certificate in Coding Practices — applying coding standards, maintainability, documentation and structured development practice across personal projects.</p>
+        </div>
       </div>
-      <div class="focus-cell reveal reveal-d1">
-        <h3>AI-Assisted Development</h3>
-        <p>Structured AI-assisted workflows using:</p>
-        <ul class="tick-list">
-          <li>Retrieval-Augmented Generation (RAG)</li>
-          <li>Model Context Protocol (MCP)</li>
-          <li>Context engineering</li>
-          <li>Sequential multi-agent workflows</li>
-          <li>AI-assisted review, debugging & docs</li>
-          <li>Human-in-the-loop verification</li>
-        </ul>
+      <div class="focus-cell reveal reveal-d1 acc">
+        <h3 class="acc-head" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-2">
+          <span>AI-Assisted Development</span>
+          <span class="acc-plus" aria-hidden="true">+</span>
+        </h3>
+        <div class="acc-body" id="focus-body-2">
+          <p>Structured AI-assisted workflows using:</p>
+          <ul class="tick-list">
+            <li>Retrieval-Augmented Generation (RAG)</li>
+            <li>Model Context Protocol (MCP)</li>
+            <li>Context engineering</li>
+            <li>Sequential multi-agent workflows</li>
+            <li>AI-assisted review, debugging & docs</li>
+            <li>Human-in-the-loop verification</li>
+          </ul>
+        </div>
       </div>
-      <div class="focus-cell reveal reveal-d2">
-        <h3>Deployment & Hosting</h3>
-        <p>Practical experience shipping web projects with:</p>
-        <ul class="tick-list">
-          <li>GitHub / GitHub Pages</li>
-          <li>Netlify</li>
-          <li>Firebase Hosting</li>
-        </ul>
-        <p>Currently expanding into additional cloud platforms, including AWS and Vercel.</p>
+      <div class="focus-cell reveal reveal-d2 acc">
+        <h3 class="acc-head" tabindex="0" role="button" aria-expanded="false" aria-controls="focus-body-3">
+          <span>Deployment & Hosting</span>
+          <span class="acc-plus" aria-hidden="true">+</span>
+        </h3>
+        <div class="acc-body" id="focus-body-3">
+          <p>Practical experience shipping web projects with:</p>
+          <ul class="tick-list">
+            <li>GitHub / GitHub Pages</li>
+            <li>Netlify</li>
+            <li>Firebase Hosting</li>
+          </ul>
+          <p>Currently expanding into additional cloud platforms, including AWS and Vercel.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1240,9 +1307,17 @@ footer .mono a:hover { color: var(--acid); }
     </div>
     <div class="contact-grid">
       <div class="contact-copy reveal">
-        <p>I can help with web development, graphic design, marketing and branding, or technical development projects.</p>
-        <p>I work on responsive websites, interactive web applications, maintenance and improvements to existing projects, WebXR experiences and other technical development work.</p>
-        <p>I use modern tools — including AI-assisted workflows — alongside established software engineering practice to research, develop, debug and document projects efficiently, with attention to security, performance and usability.</p>
+        <div class="further acc">
+          <button class="acc-head" type="button" aria-expanded="false" aria-controls="further-details-body">
+            <span>Further Details</span>
+            <span class="acc-plus" aria-hidden="true">+</span>
+          </button>
+          <div class="acc-body" id="further-details-body">
+            <p>I can help with web development, graphic design, marketing and branding, or technical development projects.</p>
+            <p>I work on responsive websites, interactive web applications, maintenance and improvements to existing projects, WebXR experiences and other technical development work.</p>
+            <p>I use modern tools — including AI-assisted workflows — alongside established software engineering practice to research, develop, debug and document projects efficiently, with attention to security, performance and usability.</p>
+          </div>
+        </div>
 
         <div class="contact-lines">
           <a class="c-line" href="mailto:Terence.Honeyford@Outlook.com">
@@ -1551,6 +1626,60 @@ footer .mono a:hover { color: var(--acid); }
     }, { threshold: 0.35 });
     document.querySelectorAll('.trait-list li').forEach(li => traitIO.observe(li));
   }
+
+  /* ---------- Accordion dropdowns + 2s typewriter (Current Focus + contact Further Details) ---------- */
+  (function accordions() {
+    const accs = document.querySelectorAll('.acc');
+    if (!accs.length) return;
+    // type a list of {el, text} items char-by-char so the whole body completes in totalMs
+    function typeElements(items, totalMs, done) {
+      const total = items.reduce((s, it) => s + it.text.length, 0);
+      const per = Math.max(4, totalMs / Math.max(1, total));
+      items.forEach(it => { it.el.textContent = ''; });
+      let ti = 0, ci = 0, timer = null;
+      function cancel() { if (timer) { clearTimeout(timer); timer = null; } }
+      function tick() {
+        if (ti >= items.length) { if (done) done(); return; }
+        const it = items[ti];
+        it.el.textContent = it.text.slice(0, ci);
+        ci++;
+        if (ci > it.text.length) { ti++; ci = 0; }
+        timer = setTimeout(tick, per);
+      }
+      tick();
+      return cancel;
+    }
+    accs.forEach(acc => {
+      const head = acc.querySelector('.acc-head');
+      const body = acc.querySelector('.acc-body');
+      if (!head || !body) return;
+      const typeItems = [...body.querySelectorAll('p, li')].map(el => ({ el, text: el.textContent }));
+      let cancel = null;
+      function open() {
+        acc.classList.add('open');
+        head.setAttribute('aria-expanded', 'true');
+        if (cancel) cancel();
+        if (reduceMotion) return;   // reduced motion: body text is already fully visible
+        acc.classList.add('typing');
+        cancel = typeElements(typeItems, 2000, () => {
+          acc.classList.remove('typing');
+          cancel = null;
+        });
+      }
+      function close() {
+        acc.classList.remove('open', 'typing');
+        head.setAttribute('aria-expanded', 'false');
+        if (cancel) { cancel(); cancel = null; }
+      }
+      head.addEventListener('click', () => (acc.classList.contains('open') ? close() : open()));
+      head.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          acc.classList.contains('open') ? close() : open();
+        }
+      });
+    });
+  })();
 
   /* ---------- Contact form validation ---------- */
   const form = document.getElementById('contactForm');
