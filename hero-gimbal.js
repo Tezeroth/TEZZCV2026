@@ -246,6 +246,35 @@
       scale = Math.min(1, w / 1000);
       x = Math.min(2.6, 1.2 + (w - 640) / 300);
       y = 0.35;
+    var textRightPx = 0;
+      var hero = container.parentElement;
+      if (hero) {
+        hero.querySelectorAll('.k-small').forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.right > textRightPx) textRightPx = r.right;
+        });
+      }
+      var cRect = container.getBoundingClientRect();
+      var halfW = Math.tan(camera.fov * Math.PI / 360) * camera.position.z * camera.aspect;
+      var baseScale = Math.min(1, w / 1000);
+      var xBase = Math.min(2.6, 1.2 + (w - 640) / 300);
+      if (!hero || textRightPx === 0) {
+        scale = baseScale;
+        x = xBase;
+      } else {
+        /* When the window is squeezed the gimbal can drift over the hero's
+           small mono text (e.g. "Terence Honeyford"). Move it right and, where
+           the hero is too narrow to fit the whole ring clear of the text AND
+           on-screen, scale it down to fit. Above ~1100px this blends back to
+           the original desktop composition. */
+        var textRightWorld = (((textRightPx - cRect.left) / w) * 2 - 1) * halfW;
+        var margin = 0.35;
+        var adaptiveScale = Math.max(0.32, (halfW - textRightWorld - margin) / (2 * OUTER_RADIUS));
+        var blend = Math.min(1, Math.max(0, (w - 1100) / 250));
+        scale = adaptiveScale * (1 - blend) + baseScale * blend;
+        var radius = OUTER_RADIUS * scale;
+        x = (textRightWorld + margin + radius) * (1 - blend) + xBase * blend;
+      }
     }
     assembly.scale.setScalar(scale);
     assembly.position.set(x, y + RING_RISE * scale, 0); /* up 40% of the rendered gimbal height */
