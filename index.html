@@ -210,6 +210,20 @@ header {
 }
 .hero-meta span b { color: var(--acid); font-weight: 400; }
 
+/* Three.js wireframe gyroscope background (see hero-gimbal.js) */
+#hero-gimbal {
+  position: absolute;
+  inset: 0;
+  z-index: -1;            /* behind hero content, above the body background */
+  pointer-events: none;
+  overflow: hidden;
+}
+#hero-gimbal canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 /* status indicator — slow attention pulse (disabled for reduced-motion below) */
 .pulse { animation: pulse 2.8s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
@@ -1038,6 +1052,7 @@ footer .mono a:hover { color: var(--acid); }
 <main>
   <!-- ============ HERO ============ -->
   <section class="hero" id="home" style="padding-left:0;padding-right:0;">
+    <div id="hero-gimbal" aria-hidden="true"></div>
     <div class="hero-meta mono">
       <span>Folio / <b>2026</b></span>
       <span>Web Dev · <b>WebXR</b> · 3D</span>
@@ -1846,6 +1861,10 @@ footer .mono a:hover { color: var(--acid); }
 
 })();
 </script>
+
+<!-- Three.js wireframe gyroscope background -->
+<script src="three.min.js"></script>
+<script src="hero-gimbal.js"></script>
 
 </body>
 </html>

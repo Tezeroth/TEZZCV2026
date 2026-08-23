@@ -210,6 +210,20 @@ header {
 }
 .hero-meta span b { color: var(--acid); font-weight: 400; }
 
+/* Three.js wireframe gyroscope background (see hero-gimbal.js) */
+#hero-gimbal {
+  position: absolute;
+  inset: 0;
+  z-index: -1;            /* behind hero content, above the body background */
+  pointer-events: none;
+  overflow: hidden;
+}
+#hero-gimbal canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .kinetic {
   flex: 1;
   display: flex; flex-direction: column; justify-content: center;
@@ -714,6 +728,7 @@ footer .mono a:hover { color: var(--acid); }
 <main>
   <!-- ============ HERO ============ -->
   <section class="hero" id="top" style="padding-left:0;padding-right:0;">
+    <div id="hero-gimbal" aria-hidden="true"></div>
     <div class="hero-meta mono">
       <span>Folio / <b>CV</b></span>
       <span>Management · <b>Design</b> · E-Commerce</span>
@@ -1412,6 +1427,10 @@ footer .mono a:hover { color: var(--acid); }
 
 })();
 </script>
+
+<!-- Three.js wireframe gyroscope background -->
+<script src="three.min.js"></script>
+<script src="hero-gimbal.js"></script>
 
 </body>
 </html>
