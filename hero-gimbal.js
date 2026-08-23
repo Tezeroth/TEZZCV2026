@@ -66,6 +66,7 @@
     paper: new THREE.Color('#d9f4ff'),
     dim: new THREE.Color('#7c94c9')
   };
+  var isLight = false;   /* true when the theme background is light (paper/sky/earth/…) */
 
   function readTheme() {
     var cs = getComputedStyle(document.documentElement);
@@ -78,11 +79,16 @@
       var n = parseInt(h.slice(0, 6), 16);
       return new THREE.Color(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
     }
-    var acid = grab('--acid'), signal = grab('--signal'), paper = grab('--paper'), dim = grab('--dim');
+    var acid = grab('--acid'), signal = grab('--signal'), paper = grab('--paper'), dim = grab('--dim'), ink = grab('--ink');
     if (acid) theme.acid = acid;
     if (signal) theme.signal = signal;
     if (paper) theme.paper = paper;
     if (dim) theme.dim = dim;
+    if (ink) {
+      /* additive-blended wireframe only glows on dark backgrounds; on light
+         themes the mid-tones wash out to white, so detect them up-front */
+      isLight = (0.2126 * ink.r + 0.7152 * ink.g + 0.0722 * ink.b) > 0.5;
+    }
   }
 
   /* ---------- small helpers ---------- */
@@ -212,14 +218,25 @@
     readTheme();
     [outerRing, midRing, innerRing].forEach(function (ring) {
       var key = ring.userData.colorKey;
-      ring.userData.ring.color.copy(theme[key]);
-      ring.userData.dots.color.copy(theme[key]);
-      ring.userData.axle.color.copy(theme.dim);
+      var col = theme[key];
+      /* On light themes the mid-tone "dim" outer ring is invisible against the
+         light background — swap it for the theme's dark text colour instead. */
+      if (isLight && key === 'dim') col = theme.paper;
+      ring.userData.ring.color.copy(col);
+      ring.userData.dots.color.copy(col);
+      ring.userData.axle.color.copy(isLight ? theme.paper : theme.dim);
     });
     coreOuterMat.color.copy(theme.paper);
     coreInnerMat.color.copy(theme.acid);
     coreDotMat.color.copy(theme.signal);
     pMat.color.copy(theme.dim);
+    /* the outer ring also needs more presence on light backgrounds */
+    for (var i = 0; i < animated.length; i++) {
+      if (animated[i].mat === outerRing.userData.ring) {
+        animated[i].base = isLight ? 0.6 : 0.35;
+        break;
+      }
+    }
   }
   applyTheme();
   new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -253,10 +270,18 @@
       dim = 0.62;                                       /* keep hero type readable */
       scale = 0.55;
       y = 0.5;
-      /* The dense central core must clear the first k-line's small mono text
-         ("Terence Honeyford …") — there is room to the right on phones. */
+      /* Park the dense central core clear of the first k-line's small mono text
+         ("Terence Honeyford …") — and, where there is room, hug the right edge
+         of the hero so the whole gimbal sits well away from the text. */
       var coreClear = textRightWorld('.k-line .k-small');
-      x = coreClear === null ? 0.6 : coreClear + 0.55 * scale + 0.15;
+      if (coreClear === null) {
+        x = 0.6;
+      } else {
+        var coreR = 0.55 * scale;                       /* icosahedron wireframe radius */
+        var minX = coreClear + coreR + 0.15;            /* at least clear of the text */
+        var rightX = halfW - coreR - 0.4;               /* else near the hero's right edge */
+        x = Math.max(minX, rightX);
+      }
     } else {
       dim = 1;
       y = 0.35;
