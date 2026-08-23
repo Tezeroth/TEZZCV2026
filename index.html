@@ -398,22 +398,15 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   padding-left: 22px;
   margin-bottom: 26px;
 }
-.about-copy .avail {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--acid);
-  display: inline-flex; align-items: center;
-  border: 1px dashed color-mix(in srgb, var(--acid) 50%, transparent);
-  padding: 10px 16px;
-  text-decoration: none;
+/* shared fill-on-hover button treatment — availability pill, hero status pill, accordion heads */
+.fill-btn {
   position: relative;
   overflow: hidden;
-  cursor: pointer;
-  transition: color .22s;
   z-index: 1;
+  transition: color .22s;
+  cursor: pointer;
 }
-/* the availability pill fills bottom-to-top exactly like the .btn ("Send Message") buttons */
-.about-copy .avail::before {
+.fill-btn::before {
   content: '';
   position: absolute; inset: 0;
   background: var(--hover);
@@ -422,9 +415,29 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   transition: transform .24s cubic-bezier(.65,0,.35,1);
   z-index: -1;
 }
-.about-copy .avail:hover { color: var(--on-hover); border-color: var(--hover); border-style: solid; }
-.about-copy .avail:hover::before { transform: scaleY(1); }
-.about-copy .avail:focus-visible { outline: 1px dashed var(--acid); outline-offset: 3px; }
+
+/* availability pill (About section) */
+.about-copy .avail {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--acid);
+  display: inline-flex; align-items: center;
+  border: 1px dashed color-mix(in srgb, var(--acid) 50%, transparent);
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+/* hero status pill (Status / Available for work) — pulses at rest, fills on hover */
+.hero-meta .pulse {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--acid);
+  display: inline-flex; align-items: center;
+  border: 1px dashed color-mix(in srgb, var(--acid) 50%, transparent);
+  padding: 8px 14px;
+  text-decoration: none;
+}
+.hero-meta .pulse:hover { animation: none; }
 
 .trait-list { list-style: none; }
 .trait-list li {
@@ -532,15 +545,23 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
 /* contact "further details" dropdown */
 .further { border-top: 1px solid var(--line-strong); }
 .further .acc-head {
-  background: none; border: none; padding: 18px 0;
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--acid) 40%, transparent);
+  padding: 16px 18px;
   font-family: 'JetBrains Mono', monospace;
   font-size: .8rem; letter-spacing: .13em; text-transform: uppercase;
   color: var(--acid);
   text-align: left;
 }
-.further .acc-head:hover .acc-plus { color: var(--acid); }
+.further .acc-head:hover .acc-plus { color: var(--on-hover); }
 .further .acc-body { color: var(--dim); padding-bottom: 22px; }
 .further .acc-body p { margin-bottom: 14px; }
+
+/* hover/focus states — declared AFTER every pill's rest-colour rule so the
+   fill always wins the cascade and the text inverts on hover */
+.fill-btn:hover { color: var(--on-hover); border-color: var(--hover); border-style: solid; }
+.fill-btn:hover::before { transform: scaleY(1); }
+.fill-btn:focus-visible { outline: 1px dashed var(--acid); outline-offset: 3px; }
 
 /* ============ SKILLS ============ */
 .skill-block { border-bottom: 1px solid var(--line); }
@@ -973,7 +994,7 @@ footer .mono a:hover { color: var(--acid); }
     <div class="hero-meta mono">
       <span>Folio / <b>2026</b></span>
       <span>Web Dev · <b>WebXR</b> · 3D</span>
-      <span>Status / <b class="pulse">Available for work</b></span>
+      <span>Status / <a class="pulse fill-btn" href="#contact" title="Go to contact">Available for work</a></span>
     </div>
 
     <div class="kinetic" aria-label="Tezz — web developer and XR">
@@ -1019,7 +1040,7 @@ footer .mono a:hover { color: var(--acid); }
         <p>I recently completed a <strong>Level 3 Certificate in Coding Practices</strong>, and I'm continuing to build on that — developing my skills in secure web development, application hardening and production deployment. My current focus is preparing web applications for commercial payment integration, which involves investigating security standards and applying secure development practices throughout.</p>
         <p>Alongside this, I'm studying a <strong>Level 3 qualification in Cybersecurity</strong>, with a particular focus on the <strong>OWASP principles</strong> — the Open Worldwide Application Security Project's industry-standard framework, best known for its Top 10 catalogue of the most critical web application security risks and the defensive practices used to mitigate them. This study feeds directly into how I approach authentication, data protection and application hardening in my development work.</p>
         <p>I also actively research AI-assisted software development — including Retrieval-Augmented Generation (RAG), Model Context Protocol (MCP), context engineering and sequential multi-agent workflows. My aim is to use AI as a development tool while retaining human oversight of architecture, security, testing and code quality.</p>
-        <a class="avail" href="#contact">● Available for freelance & technical projects</a>
+        <a class="avail fill-btn" href="#contact">● Available for freelance & technical projects</a>
       </div>
       <ul class="trait-list">
         <li class="reveal">
@@ -1331,7 +1352,7 @@ footer .mono a:hover { color: var(--acid); }
     <div class="contact-grid">
       <div class="contact-copy reveal">
         <div class="further acc">
-          <button class="acc-head" type="button" aria-expanded="false" aria-controls="further-details-body">
+          <button class="acc-head fill-btn" type="button" aria-expanded="false" aria-controls="further-details-body">
             <span>Further Details</span>
             <span class="acc-plus" aria-hidden="true">+</span>
           </button>
