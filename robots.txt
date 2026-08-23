@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tezeroth.github.io/TEZZCV2026/sitemap.xml
