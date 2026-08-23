@@ -546,7 +546,7 @@ footer .mono a:hover { color: var(--acid); }
 /* ============ RESPONSIVE ============ */
 @media (max-width: 1020px) {
   .proj-row { grid-template-columns: 52px 1fr auto; }
-  .proj-thumb { display: none; }
+  .proj-thumb { grid-column: 1 / -1; height: clamp(140px, 36vw, 240px); }
   .proj-desc { display: none; }
   .contact-grid { grid-template-columns: 1fr; }
 }
@@ -565,6 +565,7 @@ footer .mono a:hover { color: var(--acid); }
   .hero-foot { grid-template-columns: 1fr; }
   .sec-note { margin-left: 0; }
   .proj-row { grid-template-columns: 40px 1fr; padding: 22px 0; }
+  .proj-thumb { height: clamp(150px, 42vw, 240px); }
   .proj-cta { grid-column: 2; }
   .proj-title h3 { font-size: clamp(1.15rem, 4.6vw, 1.6rem); }
   .c-line { grid-template-columns: 86px 1fr; }

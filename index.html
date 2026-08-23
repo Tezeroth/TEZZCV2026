@@ -744,7 +744,8 @@ footer .mono a:hover { color: var(--acid); }
   .skill-head { grid-template-columns: 44px 1fr; }
   .token-wrap { grid-column: 1 / -1; padding-left: calc(44px + clamp(14px, 3vw, 34px)); }
   .proj-row { grid-template-columns: 52px 1fr auto; }
-  .proj-thumb { display: none; }
+  /* thumbnails show as a full-width banner on top of the card instead of being hidden */
+  .proj-thumb { grid-column: 1 / -1; height: clamp(140px, 36vw, 240px); }
   .proj-desc { display: none; }
   /* sublinks must become a full-width block aligned with the title,
      otherwise grid-column:3/-1 jams them into the CTA column */
@@ -770,6 +771,7 @@ footer .mono a:hover { color: var(--acid); }
   /* clean stacked card on phones: num + title/CTA on top, sublinks as an
      indented full-width block beneath a dashed hairline (design rule) */
   .proj-row { grid-template-columns: 40px 1fr; padding: 22px 0; }
+  .proj-thumb { height: clamp(150px, 42vw, 240px); }
   .proj-cta { grid-column: 2; }
   .proj-title h3 { font-size: clamp(1.15rem, 4.6vw, 1.6rem); }
   .proj-sublinks {
