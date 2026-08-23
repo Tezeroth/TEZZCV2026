@@ -146,7 +146,7 @@ header {
   font-size: .8rem; color: var(--acid);
   letter-spacing: 0;
 }
-.brand-name { font-family: 'JetBrains Mono', monospace; font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; }
+.brand-name { font-family: 'JetBrains Mono', monospace; font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
 .brand-name b { color: var(--acid); font-weight: 700; }
 
 .nav-links { display: flex; list-style: none; }
@@ -582,15 +582,18 @@ footer .mono a:hover { color: var(--acid); }
 .to-top:hover { background: var(--hover); color: var(--on-hover); border-color: var(--hover); }
 
 /* ============ RESPONSIVE ============ */
-@media (max-width: 1020px) {
-  .proj-row { grid-template-columns: 52px 1fr auto; }
-  .proj-thumb { grid-column: 1 / -1; height: clamp(140px, 36vw, 240px); }
-  .proj-desc { display: none; }
-  .contact-grid { grid-template-columns: 1fr; }
+/* 1021–1240px: desktop nav is tight against the theme control — tighten the
+   header so the links + theme toggle fit without overflowing the row
+   (the full-padding header only fits once the viewport is ~1250px+) */
+@media (max-width: 1240px) {
+  .brand { padding-left: 24px; padding-right: 24px; }
+  .nav-links a { padding-left: 14px; padding-right: 14px; }
+  .theme-name { display: none; }
 }
-@media (max-width: 760px) {
+@media (max-width: 1020px) {
+  /* full desktop nav no longer fits below 1020px → switch to the burger dropdown */
   .nav-links {
-    position: fixed; top: 53px; left: 0; right: 0;
+    position: fixed; top: 54px; left: 0; right: 0;
     flex-direction: column;
     background: var(--mobile-nav-bg);
     max-height: 0; overflow: hidden;
@@ -600,8 +603,22 @@ footer .mono a:hover { color: var(--acid); }
   .nav-links.open { max-height: 420px; }
   .nav-links a { padding: 16px var(--pad); border-left: none; border-top: 1px solid var(--line); }
   .burger { display: block; }
+  .proj-row { grid-template-columns: 52px 1fr auto; }
+  .proj-thumb { grid-column: 1 / -1; height: clamp(140px, 36vw, 240px); }
+  .proj-desc { display: none; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
   .hero-foot { grid-template-columns: 1fr; }
   .sec-note { margin-left: 0; }
+  /* section headers on phones: index + title stay inline (grid), the note
+     drops below across the full width so every header reads the same */
+  .sec-head { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 10px; row-gap: 12px; }
+  .sec-note { margin-left: 0; grid-column: 1 / -1; }
+  /* hero buttons become separate pills on phones (gap + restored border)
+     so a wrapped second button never loses its left edge */
+  .btn-row { gap: 12px; }
+  .btn + .btn { border-left: 1px solid var(--line-strong); }
   /* hero title breathing room when the kinetic lines stack on phones */
   .kinetic { gap: 8px; }
   /* footer stacks and centres on phones */
@@ -614,9 +631,16 @@ footer .mono a:hover { color: var(--acid); }
   .c-line { grid-template-columns: 86px 1fr; }
   .c-arrow { display: none; }
 }
+@media (max-width: 560px) {
+  /* hero display type scales down to fit the viewport so the long Anton
+     words (GRAPHIC DESIGN / & DESIGN BUILDER) never clip at the screen edge */
+  .k-line { font-size: clamp(2.2rem, 12.5vw, 3.4rem); }
+  .k-word-indent { padding-left: clamp(0px, 5vw, 130px); }
+}
 @media (max-width: 500px) {
   .brand { padding: 12px 14px; gap: 10px; }
   .brand-name { display: none; }
+  .nav-links { top: 50px; }   /* matches the 50px header once the brand name is hidden */
   .theme-name { padding: 0 10px; }
   .theme-toggle { padding: 0 12px; }
   .burger { padding: 0 14px; }
