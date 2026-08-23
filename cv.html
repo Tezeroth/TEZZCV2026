@@ -1104,11 +1104,11 @@ footer .mono a:hover { color: var(--acid); }
 
   /* ---------- Colour scheme cycler ---------- */
   const THEMES = ['tdr', 'volt', 'ember', 'mint', 'cobalt', 'rose', 'paper', 'sky', 'earth', 'retro', 'pastelpurple', 'neon', 'cyber', 'wipeout', 'blueprint', 'hazard', 'terminal', 'sumi'];
-  let themeIndex = 0;
+  let themeIndex = THEMES.indexOf('wipeout'); /* first visit → WIPEOUT */
   try {
     const saved = localStorage.getItem('tezz-theme');
     if (saved && THEMES.includes(saved)) themeIndex = THEMES.indexOf(saved);
-  } catch (e) { /* storage unavailable — default theme */ }
+  } catch (e) { /* storage unavailable — default theme (wipeout) */ }
 
   function applyTheme() {
     const t = THEMES[themeIndex];
@@ -1329,16 +1329,5 @@ footer .mono a:hover { color: var(--acid); }
 })();
 </script>
 
-<script>
-  /* ---------- First-visit theme: WIPEOUT ---------- */
-  try {
-    if (!localStorage.getItem('tezz-theme')) {
-      localStorage.setItem('tezz-theme', 'wipeout');
-      document.documentElement.setAttribute('data-theme', 'wipeout');
-      const nameEl = document.getElementById('themeName');
-      if (nameEl) nameEl.textContent = 'WIPEOUT';
-    }
-  } catch (e) { /* ignore */ }
-</script>
 </body>
 </html>
