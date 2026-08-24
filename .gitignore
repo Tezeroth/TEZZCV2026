@@ -10,3 +10,6 @@ Desktop.ini
 
 # Local dev
 node_modules/
+
+# Headless-Chrome (DevTools Protocol) diagnostics + screenshots
+.cdp-tmp/

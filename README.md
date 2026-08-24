@@ -11,6 +11,8 @@ Live: https://tezeroth.github.io/TEZZCV2026/
 - `index.html` — main portfolio (web developer / WebXR / 3D). Theme system + Three.js gimbal hero background.
 - `cv.html` — Curriculum Vitæ.
 - `graphic-design-portfolio.html` — **still lorem-ipsum placeholder content** (see TODO).
+- `shaders.html` — Shader Lab: live GLSL fragment shaders + the WebGL solar-corona hero, with the A-Frame skybox/viewer demos launched from it.
+- `skybox.html`, `viewer.html` — fullscreen A-Frame demos (raymarched skyboxes / PBR "Metal Magma Mirror"), marked `noindex`.
 
 ## Running / testing
 
@@ -51,6 +53,8 @@ Live: https://tezeroth.github.io/TEZZCV2026/
 - Mobile layout polish across all pages: hero display type scaling, project-card alignment, consistent section-header grid, burger-menu breakpoint raised to 1020px, header overflow fixes at 761–1230px, brand border fix.
 - Three.js wireframe gyroscope hero background (added, refined, positioned, light-theme colour fix).
 - Full SEO/technical pass: canonical/OG/Twitter/JSON-LD, robots.txt, sitemap.xml, single H1, favicons, descriptive asset filenames + lazy loading, copy updates (commit `d486461`).
+- Shader lab (commits `9230888`, `a9d328e`): static thumbnails, device tiers, seamless solar-corona hero, legibility fixes.
+- Solar-corona moon rim anti-aliased (fwidth smoothstep feather + premultiplied blend, commit `4aac52f`).
 
 ## TODO / open items
 
