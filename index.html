@@ -319,11 +319,27 @@ header {
   padding: 0 var(--pad) clamp(28px, 5vh, 56px);
 }
 .hero-lede {
-  max-width: 520px;
+  position: relative;
+  max-width: 560px;
   color: var(--dim);
-  font-size: clamp(.95rem, 1.6vw, 1.08rem);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1rem, 1.7vw, 1.15rem);
+  line-height: 1.7;
+  letter-spacing: .01em;
+  padding-left: 20px;
+  border-left: 2px solid var(--acid);
 }
-.hero-lede strong { color: var(--paper); font-weight: 500; }
+.hero-lede::before {
+  content: attr(data-kicker);
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 10px;
+}
+.hero-lede strong { color: var(--paper); font-weight: 600; }
 .btn-row { display: flex; gap: 0; flex-wrap: wrap; }
 
 .btn {
@@ -1210,7 +1226,7 @@ footer .mono a:hover { color: var(--acid); }
     </div>
 
     <div class="hero-foot">
-      <p class="hero-lede">Freelance <strong>web developer</strong> building custom websites and web applications — <strong>booking systems</strong>, <strong>invoicing</strong> and <strong>e-commerce</strong> — plus interactive <strong>WebXR experiences</strong>, built with secure, maintainable and AI-assisted workflows.</p>
+      <p class="hero-lede" data-kicker="intro">I build <strong>websites, web applications and interactive 3D experiences</strong> — from booking and e-commerce systems to WebXR projects that run directly in the browser.</p>
       <div class="btn-row">
         <a href="#projects" class="btn"><span class="btn-txt" data-text="View projects">View projects</span> <span class="arr">→</span></a>
         <a href="cv.html" class="btn"><span class="btn-txt" data-text="Full CV">Full CV</span></a>
@@ -1235,16 +1251,16 @@ footer .mono a:hover { color: var(--acid); }
     </div>
     <div class="about-grid">
       <div class="about-copy reveal">
-        <p class="pull">I build custom websites and web applications — booking systems, invoicing, e-commerce and interactive WebXR experiences — combining immersive 3D environments with modern web technology.</p>
+        <p class="pull">I'm a web developer with a particular interest in <strong>3D, WebXR and the possibilities of running interactive environments directly in the browser.</strong></p>
         <div class="about-details acc">
           <button class="acc-head fill-btn" type="button" aria-expanded="false" aria-controls="about-details-body">
             <span class="btn-txt" data-text="Further Details">Further Details</span>
             <span class="acc-plus" aria-hidden="true">+</span>
           </button>
           <div class="acc-body" id="about-details-body">
-            <p>I recently completed a <strong>Level 3 Certificate in Coding Practices</strong>, and I'm continuing to build on that — developing my skills in secure web development, application hardening and production deployment. My current focus is preparing web applications for commercial payment integration, which involves investigating security standards and applying secure development practices throughout.</p>
-            <p>Alongside this, I'm studying a <strong>Level 3 qualification in Cybersecurity</strong>, with a particular focus on the <strong>OWASP principles</strong> — the Open Worldwide Application Security Project's industry-standard framework, best known for its Top 10 catalogue of the most critical web application security risks and the defensive practices used to mitigate them. This study feeds directly into how I approach authentication, data protection and application hardening in my development work.</p>
-            <p>I also actively research AI-assisted software development — including Retrieval-Augmented Generation (RAG), Model Context Protocol (MCP), context engineering and sequential multi-agent workflows. My aim is to use AI as a development tool while retaining human oversight of architecture, security, testing and code quality.</p>
+            <p>Most of my development work is self-directed. I build projects to learn by actually solving problems, rather than simply following tutorials. That has taken me from front-end development and web applications into <strong>3D graphics, shaders, VR, cybersecurity and AI-assisted development.</strong></p>
+            <p>I recently completed a <strong>Level 3 Certificate in Coding Practices</strong> and I'm continuing to develop my knowledge through practical projects and further study.</p>
+            <p>Alongside this, I'm studying a <strong>Level 3 Cyber Security qualification</strong> to strengthen my understanding of secure web development.</p>
           </div>
         </div>
         <a class="avail fill-btn" href="#contact">
