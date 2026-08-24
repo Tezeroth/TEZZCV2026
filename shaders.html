@@ -335,6 +335,92 @@ html[data-theme="cobalt"] .hero-lede {
 }
 html[data-theme="cobalt"] .hero-lede::before { text-shadow: none; }
 html[data-theme="cobalt"] .hero-lede strong { text-shadow: none; }
+/* LIGHT THEMES (SUMI / PAPER / SKY / EARTH / PASTELPURPLE): hard grey drop
+   shadow cast right on the small mono shader-lab texts — raises the light text
+   off the light background for legibility — plus a blurry smudgy halo in the
+   theme's acid colour behind the whole text. */
+html[data-theme="sumi"] .kinetic .k-line .k-small,
+html[data-theme="paper"] .kinetic .k-line .k-small,
+html[data-theme="sky"] .kinetic .k-line .k-small,
+html[data-theme="earth"] .kinetic .k-line .k-small,
+html[data-theme="pastelpurple"] .kinetic .k-line .k-small,
+html[data-theme="sumi"] .hero-lede::before,
+html[data-theme="paper"] .hero-lede::before,
+html[data-theme="sky"] .hero-lede::before,
+html[data-theme="earth"] .hero-lede::before,
+html[data-theme="pastelpurple"] .hero-lede::before {
+  text-shadow:
+    2px 0 0 rgba(0, 0, 0, 0.55),
+    1px 0 0 rgba(0, 0, 0, 0.25),
+    0 0 6px color-mix(in srgb, var(--acid) 45%, transparent);
+}
+/* WIPEOUT / MINT / BLUEPRINT: sharp white edge cast up-right on the lede's
+   plain text (the "--" and "you can walk through with A-Frame" parts),
+   matching the cobalt raised look; the acid kicker + strong stay clean. */
+html[data-theme="wipeout"] .hero-lede,
+html[data-theme="mint"] .hero-lede,
+html[data-theme="blueprint"] .hero-lede {
+  text-shadow: 2px -2px 0 rgba(255, 255, 255, 0.85);
+}
+html[data-theme="wipeout"] .hero-lede::before,
+html[data-theme="wipeout"] .hero-lede strong,
+html[data-theme="mint"] .hero-lede::before,
+html[data-theme="mint"] .hero-lede strong,
+html[data-theme="blueprint"] .hero-lede::before,
+html[data-theme="blueprint"] .hero-lede strong {
+  text-shadow: none;
+}
+/* HAZARD: "light from the top-right" on the RAYMARCH . FBM NOISE ... mono text —
+   white lit edge on the top/right, dark shade falling to the bottom/left. */
+html[data-theme="hazard"] .kinetic .k-row .k-small {
+  text-shadow:
+    1px -1px 0 rgba(255, 255, 255, 0.85),
+    -1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+/* TERMINAL: same "light from the top-right" dual-shadow as hazard, on:
+   - .kinetic .k-line .k-small   (Terence Honeyford / Shader Lab — right of TEZZ)
+   - .kinetic .k-row .k-small    (RAYMARCH . FBM NOISE ...)
+   - .hero-lede                  (Live GLSL ... / you can walk through with A-Frame)
+   - .hero-lede::before          (the small SHADER LAB kicker)
+   The lede <strong> stays clean. */
+html[data-theme="terminal"] .kinetic .k-line .k-small,
+html[data-theme="terminal"] .kinetic .k-row .k-small,
+html[data-theme="terminal"] .hero-lede,
+html[data-theme="terminal"] .hero-lede::before {
+  text-shadow:
+    1px -1px 0 rgba(255, 255, 255, 0.85),
+    -1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+html[data-theme="terminal"] .hero-lede strong {
+  text-shadow: none;
+}
+/* TDR (the default theme — no data-theme attribute): same light-from-top-right
+   dual-shadow on the four shader-lab texts; lede strong stays clean. */
+html:not([data-theme]) .kinetic .k-line .k-small,
+html:not([data-theme]) .kinetic .k-row .k-small,
+html:not([data-theme]) .hero-lede,
+html:not([data-theme]) .hero-lede::before {
+  text-shadow:
+    1px -1px 0 rgba(255, 255, 255, 0.85),
+    -1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+html:not([data-theme]) .hero-lede strong {
+  text-shadow: none;
+}
+/* RETRO: same light-from-top-right dual-shadow on the four shader-lab texts
+   (retro's bright paper is yellow #ffcf00 + pale lilac dim — the "white text"
+   of the theme); lede strong stays clean like the other themes. */
+html[data-theme="retro"] .kinetic .k-line .k-small,
+html[data-theme="retro"] .kinetic .k-row .k-small,
+html[data-theme="retro"] .hero-lede,
+html[data-theme="retro"] .hero-lede::before {
+  text-shadow:
+    1px -1px 0 rgba(255, 255, 255, 0.85),
+    -1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+html[data-theme="retro"] .hero-lede strong {
+  text-shadow: none;
+}
 .btn-row { display: flex; gap: 0; flex-wrap: wrap; }
 
 .btn {
