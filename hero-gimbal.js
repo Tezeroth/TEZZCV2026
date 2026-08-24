@@ -29,6 +29,15 @@
   var container = document.getElementById('hero-gimbal');
   if (!container || typeof THREE === 'undefined') return;
 
+  /* gimbal-core portal: an invisible click target glued to the central core.
+     positionLink() below projects the core's world position to screen every
+     frame so the link tracks the dodecahedron exactly at every viewport size. */
+  var gimbalLink = document.getElementById('gimbal-link');
+  var linkShown = false;
+  var linkSize = 0;
+  var cw = 0, ch = 0;
+  var tmpV = new THREE.Vector3();
+
   /* WebGL availability gate — fail silently on devices without it */
   var hasWebGL = (function () {
     try {
@@ -37,6 +46,7 @@
     } catch (e) { return false; }
   })();
   if (!hasWebGL) return;
+  document.documentElement.classList.add('gimbal-ready');   /* JS takes over link positioning */
 
   /* ---------- capability ladder ---------- */
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -314,6 +324,14 @@
     }
     assembly.scale.setScalar(scale);
     assembly.position.set(x, y + RING_RISE * scale, 0); /* up 40% of the rendered gimbal height */
+
+    cw = w; ch = h;
+    if (gimbalLink) {
+      var pxPerUnit = w / (2 * halfW);
+      linkSize = Math.max(44, Math.min(120, 2.6 * 0.55 * scale * pxPerUnit));
+      gimbalLink.style.width = linkSize + 'px';
+      gimbalLink.style.height = linkSize + 'px';
+    }
   }
   if (window.ResizeObserver) {
     new ResizeObserver(layout).observe(container);
@@ -377,6 +395,24 @@
     last = now;
     update((now - t0) / 1000, dt);
     renderer.render(scene, camera);
+    if (gimbalLink) positionLink();
+  }
+
+  /* Keep the gimbal-core portal glued to the icosahedron: project its world
+     position through the camera after every render (covers the adaptive
+     layout, mouse parallax and the core's own wobble). */
+  function positionLink() {
+    coreGroup.getWorldPosition(tmpV);
+    tmpV.project(camera);
+    var d = linkSize > 0 ? linkSize : 80;
+    var x = (tmpV.x * 0.5 + 0.5) * cw - d / 2;
+    var y = (-tmpV.y * 0.5 + 0.5) * ch - d / 2;
+    /* keep the hit area on-screen even when the gimbal parks the core at the
+       hero's edge (narrow phones) so the portal is always clickable */
+    x = Math.max(0, Math.min(cw - d, x));
+    y = Math.max(0, Math.min(ch - d, y));
+    gimbalLink.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+    if (!linkShown) { gimbalLink.style.opacity = '1'; linkShown = true; }
   }
 
   renderer.domElement.addEventListener('webglcontextlost', function (e) {

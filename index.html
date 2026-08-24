@@ -273,6 +273,130 @@ header {
   height: 100% !important;
 }
 
+/* gimbal-core portal: invisible click target glued to the dodecahedron.
+   Positioned every frame by hero-gimbal.js; the media queries below are the
+   no-JS / no-WebGL fallback and html.gimbal-ready hands it to JS. */
+#gimbal-link {
+  position: absolute; left: 62%; top: 47%;
+  transform: translate(-50%, -50%);
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--acid) 45%, transparent);
+  opacity: 0;
+  transition: opacity .35s ease, border-color .2s, box-shadow .2s;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 3;
+  display: block;
+  text-decoration: none;
+}
+@media (max-width: 639px) { #gimbal-link { left: 71%; top: 46%; } }
+@media (min-width: 640px) and (max-width: 1099px) { #gimbal-link { left: 68%; top: 47%; } }
+html:not(.gimbal-ready) #gimbal-link { opacity: 1; }   /* no-WebGL: show the media-query fallback portal */
+html.gimbal-ready #gimbal-link { left: 0; top: 0; transform: none; }
+#gimbal-link:hover, #gimbal-link:focus-visible {
+  border-color: var(--acid);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--acid) 55%, transparent), inset 0 0 14px color-mix(in srgb, var(--acid) 25%, transparent);
+  outline: none;
+}
+.gimbal-link-tag {
+  position: absolute; top: -26px; left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .56rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--acid);
+  background: color-mix(in srgb, var(--ink) 85%, transparent);
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--acid) 40%, transparent);
+  opacity: 0;
+  transition: opacity .2s, transform .2s;
+  pointer-events: none;
+}
+#gimbal-link:hover .gimbal-link-tag,
+#gimbal-link:focus-visible .gimbal-link-tag { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ============ SHADER LAB WARNING — garish police-line modal ============ */
+#warnOverlay {
+  position: fixed; inset: 0; z-index: 300;
+  display: none;
+  align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  padding: 20px;
+}
+#warnOverlay.open { display: flex; }
+.warn-card {
+  position: relative;
+  width: min(580px, 100%);
+  background: #0b0b0b;
+  border: 3px solid #ffd500;
+  box-shadow: 0 0 0 3px #000, 0 0 34px rgba(255, 213, 0, 0.55), 0 0 90px rgba(255, 0, 60, 0.45);
+  animation: warn-card-flash 1.6s steps(2) infinite;
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+}
+@keyframes warn-card-flash { 50% { box-shadow: 0 0 0 3px #000, 0 0 20px rgba(255, 213, 0, 0.35), 0 0 50px rgba(255, 0, 60, 0.6); } }
+.warn-tape {
+  height: 26px;
+  background: repeating-linear-gradient(45deg, #ffd500 0 18px, #000 18px 36px);
+  animation: warn-tape-move 1.1s linear infinite;
+}
+.warn-tape.tape-top { border-bottom: 3px solid #000; }
+.warn-tape.tape-bottom { border-top: 3px solid #000; }
+@keyframes warn-tape-move { to { background-position: 36px 36px; } }
+.warn-body { padding: 30px 32px 36px; text-align: center; position: relative; }
+.warn-kicker {
+  display: inline-block;
+  color: #ff2e2e;
+  font-size: .74rem; letter-spacing: .34em; text-transform: uppercase;
+  font-weight: 700;
+  border: 2px solid #ff2e2e;
+  padding: 6px 14px;
+  animation: warn-blink 0.9s steps(2) infinite;
+}
+@keyframes warn-blink { 50% { opacity: .15; } }
+.warn-body h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1.5rem, 5vw, 2.3rem);
+  line-height: 1.05;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: #ffd500;
+  margin: 18px 0 14px;
+  text-shadow: 0 0 12px rgba(255, 213, 0, 0.6), 0 0 30px rgba(255, 213, 0, 0.3);
+}
+.warn-msg { color: #d8d8d8; font-size: .78rem; line-height: 1.9; letter-spacing: .04em; margin: 0; }
+.warn-msg strong { color: #ff6b6b; font-weight: 700; }
+.warn-actions { display: flex; gap: 0; margin-top: 28px; }
+.warn-btn {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
+  font-weight: 700;
+  padding: 18px 12px;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+.warn-proceed {
+  background: repeating-linear-gradient(45deg, #ffd500 0 14px, #000 14px 28px);
+  color: #000;
+  animation: warn-blink 1.15s steps(2) infinite;
+}
+.warn-proceed:hover { animation: none; background: #ffe14d; }
+.warn-back { background: #101318; color: #9aa7c4; border-color: #3a4a72; }
+.warn-back:hover { color: #fff; border-color: #9aa7c4; background: #161b26; }
+.warn-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px);
+  animation: warn-scan 0.4s steps(3) infinite;
+  z-index: 1;
+}
+@keyframes warn-scan { 50% { opacity: 0.6; } }
+
 /* status indicator — slow attention pulse (disabled for reduced-motion below) */
 .pulse { animation: pulse 2.8s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
@@ -1206,6 +1330,9 @@ footer .mono a:hover { color: var(--acid); }
   <!-- ============ HERO ============ -->
   <section class="hero" id="home" style="padding-left:0;padding-right:0;">
     <div id="hero-gimbal" aria-hidden="true"></div>
+    <a href="shaders.html" id="gimbal-link" aria-label="Enter the shader lab — warning: some devices may crash" aria-haspopup="dialog">
+      <span class="gimbal-link-tag">Enter shader lab</span>
+    </a>
     <div class="hero-meta mono">
       <span>Folio / <b>2026</b></span>
       <span>Web Dev · <b>WebXR</b> · 3D</span>
@@ -2018,6 +2145,51 @@ footer .mono a:hover { color: var(--acid); }
 <!-- Three.js wireframe gyroscope background -->
 <script src="three.min.js"></script>
 <script src="hero-gimbal.js"></script>
+
+<!-- Shader lab warning (gimbal-core portal) -->
+<div id="warnOverlay" role="dialog" aria-modal="true" aria-labelledby="warnTitle" aria-describedby="warnMsg">
+  <div class="warn-card">
+    <div class="warn-tape tape-top" aria-hidden="true"></div>
+    <div class="warn-body">
+      <span class="warn-kicker">&#9888; Caution</span>
+      <h2 id="warnTitle">Are you sure you wish to continue?</h2>
+      <p class="warn-msg" id="warnMsg">The <strong>shader lab</strong> runs intense real-time WebGL workloads. On some devices this may <strong>crash the tab or overheat the device</strong>. Proceed at your own risk.</p>
+      <div class="warn-actions">
+        <button type="button" class="warn-btn warn-proceed" id="warnProceed">Proceed</button>
+        <button type="button" class="warn-btn warn-back" id="warnBack">Back out</button>
+      </div>
+    </div>
+    <div class="warn-tape tape-bottom" aria-hidden="true"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var link = document.getElementById('gimbal-link');
+  var overlay = document.getElementById('warnOverlay');
+  var proceed = document.getElementById('warnProceed');
+  var back = document.getElementById('warnBack');
+  if (!link || !overlay || !proceed || !back) return;
+  var lastFocus = null;
+  function openWarn(e) {
+    e.preventDefault();
+    lastFocus = document.activeElement;
+    overlay.classList.add('open');
+    back.focus();
+  }
+  function closeWarn() {
+    overlay.classList.remove('open');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  link.addEventListener('click', openWarn);
+  back.addEventListener('click', closeWarn);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeWarn(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeWarn();
+  });
+  proceed.addEventListener('click', function () { window.location.href = 'shaders.html'; });
+})();
+</script>
 
 </body>
 </html>

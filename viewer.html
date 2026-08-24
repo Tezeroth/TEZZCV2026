@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEZZ -- Metal Magma Mirror . PBR Viewer</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=block" rel="stylesheet">
+<script src="a-frame.min.js"></script>
+<style>
+html, body { margin: 0; height: 100%; overflow: hidden; background: #05070f; }
+body { font-family: 'JetBrains Mono', monospace; }
+a-scene { width: 100% !important; height: 100% !important; }
+a-scene .a-enter-vr, a-scene .a-enter-ar { display: none !important; }
+#hud {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  pointer-events: none;
+  font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+  color: #7c94c9;
+}
+#hud .t { color: #d9f4ff; letter-spacing: .22em; }
+#hud .tier { color: #00f0ff; font-size: .56rem; letter-spacing: .16em; border: 1px solid #3a4a72; padding: 6px 9px; }
+#hud a {
+  pointer-events: auto;
+  color: #d9f4ff; text-decoration: none;
+  border: 1px solid #3a4a72;
+  background: rgba(7, 11, 28, 0.6);
+  padding: 9px 13px;
+  transition: color .2s, border-color .2s, background .2s;
+}
+#hud a:hover { color: #ffed00; border-color: #ff00a8; background: rgba(255, 0, 168, 0.15); }
+#hint {
+  position: fixed; bottom: 16px; left: 0; right: 0; z-index: 20;
+  text-align: center;
+  font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+  color: #7c94c9; pointer-events: none;
+}
+#dbg { display: block; position: fixed; right: 18px; top: 54px; z-index: 30; font-family: 'JetBrains Mono', monospace; }
+#dbgToggle { background: rgba(7, 11, 28, 0.7); border: 1px solid #00f0ff; color: #00f0ff; padding: 8px 12px; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; }
+#dbgToggle:hover { background: #00f0ff; color: #000b14; }
+#dbgPanel { display: none; margin-top: 8px; background: rgba(7, 11, 28, 0.85); border: 1px solid #3a4a72; padding: 12px 14px; width: 230px; }
+#dbg.open #dbgPanel { display: block; }
+#dbgPanel .dbg-title { color: #d9f4ff; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 10px; }
+#dbgPanel label { display: flex; flex-direction: column; gap: 4px; color: #7c94c9; font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 10px; }
+#dbgPanel label span { display: flex; justify-content: space-between; align-items: baseline; }
+.dbg-val { color: #00f0ff; font-weight: 400; letter-spacing: .08em; }
+#dbgPanel input[type=range] { width: 100%; accent-color: #00f0ff; }
+.dbg-shapes { display: flex; gap: 6px; margin-bottom: 10px; }
+.dbg-shapes button { flex: 1; background: none; border: 1px solid #3a4a72; color: #7c94c9; font-family: 'JetBrains Mono', monospace; font-size: .56rem; letter-spacing: .12em; padding: 6px 0; cursor: pointer; }
+.dbg-shapes button.on { border-color: #00f0ff; color: #00f0ff; }
+#dbgStatus { font-size: .54rem; color: #00ff41; letter-spacing: .1em; margin-top: 6px; }
+#err { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: #2a0a12; color: #ff5c8a; font-size: .7rem; letter-spacing: .08em; padding: 10px 14px; }
+#err.show { display: block; }
+</style>
+</head>
+<body>
+<a-scene renderer="antialias: true" env-magma viewer-controls>
+  <a-entity id="turntable" turntable>
+      <a-entity id="model" metallic-model="shape: rock"></a-entity>
+    </a-entity>
+    <a-entity id="camera" camera position="0 0 4" near="0.01" far="100"></a-entity>
+  <a-light type="directional" intensity="0.35" position="2 3 1"></a-light>
+  <a-light type="ambient" intensity="0.15"></a-light>
+</a-scene>
+<div id="hud">
+  <span class="t">Metal Magma Mirror</span>
+  <span class="tier" id="tierBadge"></span>
+  <a href="shaders.html#s2">&#8592; Back to lab</a>
+</div>
+<div id="hint">scroll to zoom . auto-rotates</div>
+<div id="dbg">
+  <button id="dbgToggle" type="button">&#9776; Debug</button>
+  <div id="dbgPanel">
+    <div class="dbg-title" id="dbgTitle">Metal Magma Mirror</div>
+    <label><span>Metalness <b class="dbg-val" id="vMetal"></b></span><input type="range" id="dbgMetal" min="0" max="1" step="0.01" value="1"></label>
+    <label><span>Roughness <b class="dbg-val" id="vRough"></b></span><input type="range" id="dbgRough" min="0" max="1" step="0.01" value="0.08"></label>
+    <label><span>Env intensity <b class="dbg-val" id="vEnv"></b></span><input type="range" id="dbgEnv" min="0" max="3" step="0.05" value="1"></label>
+    <label><span>Rotation speed <b class="dbg-val" id="vSpin"></b></span><input type="range" id="dbgSpin" min="0" max="120" step="1" value="22"></label>
+    <div class="dbg-shapes">
+      <button data-shape="rock">Rock</button>
+      <button data-shape="knot">Knot</button>
+      <button data-shape="drop">Drop</button>
+    </div>
+    <div id="dbgStatus"></div>
+  </div>
+</div>
+<div id="err"></div>
+<script>
+// ---- device tier: LOW / MED / HIGH (mirrors skybox.html's detection) ----
+const TIERS = {
+  low:  { label: 'LOW',  magma: 512,  seg: 40, pmremEvery: 10, res: 0.5 },
+  med:  { label: 'MED',  magma: 768,  seg: 52, pmremEvery: 8,  res: 0.65 },
+  high: { label: 'HIGH', magma: 1024, seg: 64, pmremEvery: 6,  res: 0.8 }
+};
+function detectTier() {
+  const forced = (location.search.match(/[?&]q=(\w+)/) || [])[1];
+  if (forced && TIERS[forced]) return forced;
+  const mobile = /Android|iPhone|iPad|iPod|Mobi|Tablet/i.test(navigator.userAgent);
+  const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const cores = navigator.hardwareConcurrency || 8;
+  if (mobile || coarse || cores <= 4) return 'low';
+  if (cores <= 8) return 'med';
+  return 'high';
+}
+const TIER = TIERS[detectTier()];
+const TIER_REASON = (() => {
+  const mobile = /Android|iPhone|iPad|iPod|Mobi|Tablet/i.test(navigator.userAgent);
+  const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  return mobile ? 'mobile' : coarse ? 'coarse pointer' : (navigator.hardwareConcurrency || 8) + ' cores';
+})();
+
+// ---- S2 MAGMA FLOW (fragment shader, reused as equirect environment) ----
+const MAGMA_FRAG = `precision highp float;
+uniform vec2 uRes; uniform float uTime;
+float hash21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float noise2(vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+             mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+float fbm2(vec2 p){
+  float v = 0.0; float a = 0.5;
+  mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
+  for (int i = 0; i < 5; i++){ v += a * noise2(p); p = m * p; a *= 0.5; }
+  return v;
+}
+void main(){
+  vec2 uv = (gl_FragCoord.xy * 2.0 - uRes) / uRes.y;
+  float t = uTime * 0.22;
+  vec2 p = uv * vec2(1.35, 1.0);
+  vec2 q = vec2(fbm2(p + t * 0.35), fbm2(p - t * 0.25 + vec2(5.2, 1.3)));
+  vec2 r = vec2(fbm2(p + q * 2.0 + vec2(1.7, 9.2) + t * 0.12), fbm2(p + q * 2.0 + vec2(8.3, 2.8) - t * 0.1));
+  float f = fbm2(p * 1.5 + r * 2.0);
+  vec3 c1 = vec3(0.0); vec3 c2 = vec3(0.5, 0.02, 0.0); vec3 c3 = vec3(1.0, 0.28, 0.0); vec3 c4 = vec3(1.0, 0.85, 0.25);
+  vec3 col = mix(mix(c1, c2, smoothstep(0.0, 0.35, f)), mix(c3, c4, smoothstep(0.5, 0.82, f)), smoothstep(0.3, 0.6, f));
+  col = mix(col, c4, pow(max(0.0, f - 0.55) / 0.45, 2.0) * 0.85);
+  col += vec3(1.0, 0.4, 0.05) * pow(max(0.0, f - 0.7) / 0.3, 3.0) * 0.9;
+  col = col * 1.3 - 0.08;
+  col *= 1.0 - 0.25 * dot(uv, uv);
+  col = 1.0 - exp(-col * 1.55);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+// ---- env-magma: render magma to an equirect canvas, feed it to the PBR env ----
+AFRAME.registerComponent('env-magma', {
+  init: function () {
+    const canvas = document.createElement('canvas');
+    canvas.width = TIER.magma; canvas.height = Math.round(TIER.magma / 2);
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      const err = document.getElementById('err');
+      if (err) { err.textContent = 'WebGL unavailable -- the magma environment needs a WebGL context.'; err.classList.add('show'); }
+      return;
+    }
+    this.canvas = canvas; this.gl = gl;
+    const sh = (type, src) => {
+      const x = gl.createShader(type);
+      gl.shaderSource(x, src); gl.compileShader(x);
+      if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(x)); throw new Error('magma shader compile failed'); }
+      return x;
+    };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, MAGMA_FRAG));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'aPos');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    this.prog = prog;
+    this.uTime = gl.getUniformLocation(prog, 'uTime');
+    this.uRes = gl.getUniformLocation(prog, 'uRes');
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLES, 0, 3); // first frame
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    this.tex = tex;
+    this.el.object3D.environment = tex;
+    // Visible equirectangular magma skybox -- the flat shader wrapped around the scene so you can SEE the environment the chrome is reflecting.
+    const sky = new THREE.Mesh(
+      new THREE.SphereGeometry(50, 48, 24),
+      new THREE.MeshBasicMaterial({ map: this.tex, side: THREE.BackSide })
+    );
+    sky.name = 'magma-sky';
+    this.sky = sky;
+    this.el.object3D.add(sky);
+    this.pendingPMREM = true;
+    this.frame = 0;
+  },
+  tick: function (t) {
+    if (!this.gl) return;
+    if (this.pendingPMREM && this.el.renderer) {
+      this.pmrem = new THREE.PMREMGenerator(this.el.renderer);
+      this.pmremRT = this.pmrem.fromEquirectangular(this.tex);
+      this.el.object3D.environment = this.pmremRT.texture;
+      this.pmremCount = 0;
+      this.pendingPMREM = false;
+    }
+    if (++this.frame % 2 === 0) {
+      this.gl.uniform1f(this.uTime, t * 0.001);
+      this.gl.uniform2f(this.uRes, this.canvas.width, this.canvas.height);
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, 3);
+      this.tex.needsUpdate = true;
+      // Refresh the prefiltered cubemap every few frames so the chrome stays live.
+      if (this.pmrem && ++this.pmremCount >= TIER.pmremEvery) {
+        this.pmremCount = 0;
+        const rt = this.pmrem.fromEquirectangular(this.tex);
+        this.el.object3D.environment = rt.texture;
+        if (this.pmremRT) this.pmremRT.dispose();
+        this.pmremRT = rt;
+      }
+    }
+  }
+});
+// ---- 3D value noise + fbm (JS) for procedural displacement ----
+function makeFbm() {
+  const rnd = (a, b, c) => {
+    const s = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453;
+    return s - Math.floor(s);
+  };
+  const noise = (x, y, z) => {
+    const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
+    const fx = x - ix, fy = y - iy, fz = z - iz;
+    const u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy), w = fz * fz * (3 - 2 * fz);
+    const n000 = rnd(ix, iy, iz), n100 = rnd(ix + 1, iy, iz), n010 = rnd(ix, iy + 1, iz), n110 = rnd(ix + 1, iy + 1, iz);
+    const n001 = rnd(ix, iy, iz + 1), n101 = rnd(ix + 1, iy, iz + 1), n011 = rnd(ix, iy + 1, iz + 1), n111 = rnd(ix + 1, iy + 1, iz + 1);
+    const nx00 = n000 + (n100 - n000) * u, nx10 = n010 + (n110 - n010) * u;
+    const nx01 = n001 + (n101 - n001) * u, nx11 = n011 + (n111 - n011) * u;
+    const nxy0 = nx00 + (nx10 - nx00) * v, nxy1 = nx01 + (nx11 - nx01) * v;
+    return nxy0 + (nxy1 - nxy0) * w;
+  };
+  return function (x, y, z) {
+    let v = 0, a = 1;
+    for (let o = 0; o < 4; o++) { v += a * noise(x, y, z); x *= 2.03; y *= 2.03; z *= 2.03; a *= 0.5; }
+    return v;
+  };
+}
+
+// ---- metallic-model: builds procedural chrome shapes with a PBR material ----
+AFRAME.registerComponent('metallic-model', {
+  schema: { shape: { default: 'rock' } },
+  init: function () { this.build(this.data.shape); },
+  update: function () {
+    if (this.mesh) { this.el.object3D.remove(this.mesh); this.material = null; this.mesh = null; }
+    this.build(this.data.shape);
+  },
+  build: function (shape) {
+    const fbm = makeFbm();
+    let geo;
+    if (shape === 'knot') {
+      geo = new THREE.TorusKnotGeometry(0.85, 0.28, TIER.seg * 4, Math.max(12, Math.floor(TIER.seg / 2)));
+    } else if (shape === 'drop') {
+      geo = new THREE.SphereGeometry(1, TIER.seg, Math.round(TIER.seg * 0.75));
+      const pos = geo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+        const len = Math.sqrt(x * x + y * y + z * z) || 1;
+        const d = 0.94 + 0.14 * fbm(x * 2.5, y * 2.5, z * 2.5);
+        pos.setXYZ(i, x / len * d, y / len * d, z / len * d);
+      }
+      geo.computeVertexNormals();
+    } else {
+      geo = new THREE.SphereGeometry(1, TIER.seg, Math.round(TIER.seg * 0.75));
+      const pos = geo.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+        const len = Math.sqrt(x * x + y * y + z * z) || 1;
+        const d = 0.78 + 0.42 * fbm(x * 2.1, y * 2.1, z * 2.1);
+        pos.setXYZ(i, x / len * d, y / len * d, z / len * d);
+      }
+      geo.computeVertexNormals();
+    }
+    this.material = new THREE.MeshStandardMaterial({ color: 0xa0a0a0, metalness: 1, roughness: 0.08 });
+    this.mesh = new THREE.Mesh(geo, this.material);
+    this.el.object3D.add(this.mesh);
+  },
+  tick: function () {
+    const m = this.material;
+    if (!m) return;
+    if (m.metalness !== DBG.metalness) m.metalness = DBG.metalness;
+    if (m.roughness !== DBG.roughness) m.roughness = DBG.roughness;
+    if (m.envMapIntensity !== DBG.envIntensity) m.envMapIntensity = DBG.envIntensity;
+  }
+});
+
+// ---- turntable: slow auto-rotation of the model ----
+AFRAME.registerComponent('turntable', {
+  tick: function (t, dt) {
+    this.el.object3D.rotation.y += THREE.MathUtils.degToRad(DBG.spin) * dt / 1000;
+  }
+});
+
+// ---- viewer-controls: fixed camera, scroll to zoom only (no drag orbit, no WASD) ----
+AFRAME.registerComponent('viewer-controls', {
+  init: function () {
+    this.dist = 4;
+    const onWheel = e => {
+      e.preventDefault();
+      this.dist = Math.max(2, Math.min(9, this.dist + e.deltaY * 0.005));
+    };
+    if (this.el.canvas) this.el.canvas.addEventListener('wheel', onWheel, { passive: false });
+    if (this.el.setAttribute) this.el.setAttribute('renderer', 'antialias: true; resolution: ' + TIER.res);
+  },
+  tick: function () {
+    const cam = this.el.camera;
+    if (cam) cam.position.set(0, 0, this.dist);
+  }
+});// ---- debug panel: global values, sliders, persistence ----
+const DBG = { metalness: 1, roughness: 0.08, envIntensity: 1, spin: 22 };
+const DBG_KEY = 'tezz-viewer-debug';
+let debugVals = {};
+try { debugVals = JSON.parse(localStorage.getItem(DBG_KEY) || '{}') || {}; } catch (e) {}
+const sliderMap = { dbgMetal: 'metalness', dbgRough: 'roughness', dbgEnv: 'envIntensity', dbgSpin: 'spin' };
+const fmtVal = v => String(+Number(v).toFixed(3));
+function bindSlider(id, key, valId) {
+  const el = document.getElementById(id);
+  if (debugVals[key] !== undefined) el.value = debugVals[key];
+  const sync = () => { document.getElementById(valId).textContent = fmtVal(el.value); DBG[key] = parseFloat(el.value); };
+  sync();
+  el.addEventListener('input', () => {
+    debugVals[key] = parseFloat(el.value);
+    try { localStorage.setItem(DBG_KEY, JSON.stringify(debugVals)); } catch (e) {}
+    sync();
+  });
+}
+Object.keys(sliderMap).forEach(id => bindSlider(id, sliderMap[id], 'v' + id.slice(3)));
+window.addEventListener('beforeunload', () => {
+  Object.keys(sliderMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) debugVals[sliderMap[id]] = parseFloat(el.value);
+  });
+  try { localStorage.setItem(DBG_KEY, JSON.stringify(debugVals)); } catch (e) {}
+});
+
+// ---- debug toggle + shape buttons ----
+document.getElementById('dbgToggle').addEventListener('click', () => document.getElementById('dbg').classList.toggle('open'));
+const shapeBtns = document.querySelectorAll('.dbg-shapes button');
+shapeBtns.forEach(b => {
+  b.addEventListener('click', () => {
+    document.getElementById('model').setAttribute('metallic-model', { shape: b.dataset.shape });
+    shapeBtns.forEach(x => x.classList.toggle('on', x === b));
+    const st = document.getElementById('dbgStatus');
+    if (st) st.textContent = 'shape: ' + b.dataset.shape;
+  });
+});
+shapeBtns[0].classList.add('on');
+const tierEl = document.getElementById('tierBadge');
+if (tierEl) tierEl.textContent = TIER.label + ' TIER . ' + TIER_REASON;
+const dstatEl = document.getElementById('dbgStatus');
+if (dstatEl && !dstatEl.textContent) dstatEl.textContent = 'TIER ' + TIER.label + ' . ' + TIER_REASON;
+
+// ---- surface script errors in the #err bar ----
+window.addEventListener('error', e => {
+  const err = document.getElementById('err');
+  if (err && e && e.message) { err.textContent = 'ERR: ' + e.message; err.classList.add('show'); }
+});
+</script>
+</body>
+</html>
