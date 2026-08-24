@@ -324,6 +324,17 @@ html[data-theme="pastelpurple"] .k-line:not(.k-outline) {
   margin-bottom: 10px;
 }
 .hero-lede strong { color: var(--paper); font-weight: 600; }
+/* COBALT: embossed 3D lede with light from the top-right — a two-step white
+   ramp on the lit edge, two-step dark ramp on the shadow edge for real depth. */
+html[data-theme="cobalt"] .hero-lede {
+  text-shadow:
+    1px -1px 0 rgba(255,255,255,.95),
+    2px -2px 0 rgba(255,255,255,.35),
+    -1px 1px 0 rgba(0,0,0,.55),
+    -2px 2px 0 rgba(0,0,0,.28);
+}
+html[data-theme="cobalt"] .hero-lede::before { text-shadow: none; }
+html[data-theme="cobalt"] .hero-lede strong { text-shadow: none; }
 .btn-row { display: flex; gap: 0; flex-wrap: wrap; }
 
 .btn {
