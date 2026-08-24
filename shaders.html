@@ -2187,8 +2187,9 @@ void main(){
      corona boils and flows instead of rotating. Irregular rim +
      asymmetric sectors + smooth radial falloff + travelling pulses.
      Colours come from the theme (--signal/--acid), the moon is the
-     darker of ink/paper. Pauses off-screen / hidden; single frame
-     under reduced-motion.
+     darker of ink/paper and its rim is fwidth-anti-aliased so the disc
+     stays smooth after the low-res buffer is upscaled. Pauses
+     off-screen / hidden; single frame under reduced-motion.
      ============================================================ */
   (function () {
     const cvs = document.getElementById('corona');
@@ -2201,7 +2202,9 @@ void main(){
     if (!gl) return;
 
     const VS = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
+    const der = gl.getExtension('OES_standard_derivatives');   /* fwidth-based moon-rim AA */
     const FS = `
+${der ? '#extension GL_OES_standard_derivatives : enable' : ''}
 precision highp float;
 uniform vec2 uRes; uniform float uTime;
 uniform vec3 uSignal; uniform vec3 uAcid; uniform vec3 uMoon;
@@ -2218,7 +2221,15 @@ void main(){
   vec2 dir = vec2(cos(ang), sin(ang));   /* continuous across the +-pi wrap */
   float t = uTime;
   float mR = uMoonR * uRes.y;
-  if (r < mR) { gl_FragColor = vec4(uMoon, 1.0); return; }
+
+  /* Anti-aliased moon rim: feather the hard disc edge over ~2 buffer
+     pixels (fwidth-scaled when the derivative extension is present) so the
+     dark disc's boundary stays smooth once the low-res buffer is upscaled
+     to the display. The solid interior keeps its fast early-out; only the
+     thin rim band pays for the full corona computation below. */
+  float aa = ${der ? 'max(fwidth(r) * 2.0, 1.0)' : '2.0'};
+  float moonMask = 1.0 - smoothstep(mR - aa, mR + aa, r);
+  if (moonMask >= 1.0) { gl_FragColor = vec4(uMoon, 1.0); return; }
   float d = r - mR;
   float rr = log(1.0 + d / mR);
 
@@ -2247,7 +2258,10 @@ void main(){
   vec3 col = mix(uAcid, uSignal, heat);
   col += uSignal * fine * 0.3;
   col *= 0.75 + 1.5 * clamp(C, 0.0, 1.0);
-  gl_FragColor = vec4(col * alpha, alpha);
+  /* Premultiplied output; over the AA band blend the corona's premultiplied
+     colour toward the moon's (opaque) premultiplied colour so the rim reads
+     as a clean, un-aliased transition instead of a hard step. */
+  gl_FragColor = vec4(mix(col * alpha, uMoon, moonMask), mix(alpha, 1.0, moonMask));
 }`;
     const sh = (type, src) => { const x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x)); return x; };
     let prog;
