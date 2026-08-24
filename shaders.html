@@ -95,7 +95,8 @@ html[data-theme="sumi"]    { --ink: #f4efe4; --ink-2: #e9e2d2; --paper: #241f18;
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--ink);
+  /* subtle page-wide tonal gradient -- ink-2 tint at the top settling to ink */
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ink-2) 55%, var(--ink)) 0%, var(--ink) 36%);
   color: var(--paper);
   font-family: 'Space Grotesk', sans-serif;
   line-height: 1.55;
@@ -225,6 +226,13 @@ header {
   position: relative;
   padding-top: 54px;
 }
+#corona {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  z-index: -1;
+  pointer-events: none;
+}
 .hero-meta {
   display: flex; justify-content: space-between; gap: 20px;
   padding: 18px var(--pad);
@@ -248,9 +256,28 @@ header {
   text-transform: uppercase;
   white-space: nowrap;
 }
+/* Ink-toned glow on the solid hero headings (TEZZ / & / BUILDER): the glow is
+   the background colour, so it lifts the glyphs off the dark moon on light
+   themes AND off the bright corona on dark themes -- legible at any size. */
+.k-line:not(.k-outline) {
+  text-shadow: 0 0 10px var(--ink), 0 0 28px var(--ink);
+}
 .k-outline {
   color: var(--ink);
   -webkit-text-stroke: 1.5px var(--paper);
+}
+/* Light themes: the dark moon can swallow the solid hero headings
+   (TEZZ / & / BUILDER) -- give them a thin light outline so they stay
+   readable over it. pastelpurple uses its own background colour instead. */
+html[data-theme="sumi"] .k-line:not(.k-outline),
+html[data-theme="paper"] .k-line:not(.k-outline),
+html[data-theme="sky"] .k-line:not(.k-outline),
+html[data-theme="earth"] .k-line:not(.k-outline),
+html[data-theme="pastelpurple"] .k-line:not(.k-outline) {
+  -webkit-text-stroke: 1px #ffffff;
+}
+html[data-theme="pastelpurple"] .k-line:not(.k-outline) {
+  -webkit-text-stroke: 1px var(--ink);
 }
 .k-acid { color: var(--acid); }
 .k-row { display: flex; align-items: baseline; gap: clamp(14px, 3vw, 40px); flex-wrap: wrap; }
@@ -437,15 +464,8 @@ section { padding: clamp(72px, 11vh, 128px) var(--pad); max-width: 1360px; margi
   position: relative;
   overflow: hidden;
 }
-.proj-thumb::after {
-  content: 'SHADER / LIVE';
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .58rem; letter-spacing: .14em;
-  color: var(--dim);
-  transition: color .22s;
-}
-.proj-thumb canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.proj-thumb.has-shader::after { content: none; }
+.proj-thumb::after { content: none; }
+.proj-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .proj-row:hover .proj-thumb {
   border-color: color-mix(in srgb, var(--on-hover) 50%, transparent);
   background: repeating-linear-gradient(45deg, transparent 0 10px, color-mix(in srgb, var(--on-hover) 7%, transparent) 10px 20px);
@@ -779,6 +799,25 @@ footer .mono a:hover { color: var(--acid); }
   .stage-hint { max-width: 72%; }
   .stage-nav { width: 38px; height: 38px; }
 }
+@media (max-width: 760px) {
+  .marquee { padding: 10px 0; }
+  .marquee-chunk { font-size: 1.5rem; }
+  .stage-hud { padding: 10px 12px; }
+  .stage-title { font-size: clamp(1rem, 4.2vw, 1.4rem); }
+  .stage-badge { font-size: .52rem; padding: 3px 6px; }
+  .stage-id { font-size: .54rem; }
+  .stage-gate .gate-key { font-size: .58rem; padding: 10px 12px; letter-spacing: .1em; max-width: 94%; text-align: center; white-space: normal; }
+  .stage-gate small { font-size: .5rem; max-width: 94%; }
+  .sec-title { font-size: clamp(1.9rem, 9vw, 3rem); }
+}
+@media (max-width: 560px) {
+  .hero-meta { font-size: .62rem; gap: 10px; padding: 14px var(--pad); }
+  .stage-counter { font-size: .56rem; }
+  .stage-hint { font-size: .5rem; max-width: 78%; }
+  .stage-nav { width: 34px; height: 34px; font-size: .9rem; }
+  .stage-gate .gate-key { font-size: .52rem; }
+  .stage-gate small { font-size: .46rem; }
+}
 @media (max-width: 560px) {
   .k-line { font-size: clamp(2.2rem, 12.5vw, 3.4rem); }
   .k-word-indent { padding-left: clamp(0px, 5vw, 130px); }
@@ -827,10 +866,12 @@ footer .mono a:hover { color: var(--acid); }
 <main>
   <!-- ============ HERO ============ -->
   <section class="hero" id="top" style="padding-left:0;padding-right:0;">
+    <canvas id="corona" aria-hidden="true"></canvas>
     <div class="hero-meta mono">
       <span>Folio / <b>SHADERS</b></span>
       <span>GLSL . <b>WebGL</b> . A-Frame</span>
       <span>Status / <b>Live</b></span>
+      <span>Perf / <b id="perfTier">—</b></span>
     </div>
 
     <div class="kinetic" aria-label="Shader Lab - GLSL, WebGL and A-Frame">
@@ -915,7 +956,7 @@ footer .mono a:hover { color: var(--acid); }
     </div>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s1">
-      <div class="proj-thumb shader-thumb" data-thumb="s1"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s1.jpg" width="160" height="90" alt="Deep Field" loading="lazy" decoding="async"></div>
       <span class="proj-num">S1</span>
       <div class="proj-title">
         <h3>Deep Field</h3>
@@ -926,7 +967,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="viewer.html">
-      <div class="proj-thumb shader-thumb" data-thumb="s2"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s2.jpg" width="160" height="90" alt="Metal Magma Mirror" loading="lazy" decoding="async"></div>
       <span class="proj-num">S2</span>
       <div class="proj-title">
         <h3>Metal Magma Mirror</h3>
@@ -937,7 +978,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s3">
-      <div class="proj-thumb shader-thumb" data-thumb="s3"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s3.jpg" width="160" height="90" alt="Clouds" loading="lazy" decoding="async"></div>
       <span class="proj-num">S3</span>
       <div class="proj-title">
         <h3>Clouds</h3>
@@ -948,7 +989,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s4">
-      <div class="proj-thumb shader-thumb" data-thumb="s4"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s4.jpg" width="160" height="90" alt="Waves" loading="lazy" decoding="async"></div>
       <span class="proj-num">S4</span>
       <div class="proj-title">
         <h3>Waves</h3>
@@ -959,7 +1000,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s5">
-      <div class="proj-thumb shader-thumb" data-thumb="s5"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s5.jpg" width="160" height="90" alt="Hyperspace" loading="lazy" decoding="async"></div>
       <span class="proj-num">S5</span>
       <div class="proj-title">
         <h3>Hyperspace</h3>
@@ -970,7 +1011,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s6">
-      <div class="proj-thumb shader-thumb" data-thumb="s6"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s6.jpg" width="160" height="90" alt="Plasma" loading="lazy" decoding="async"></div>
       <span class="proj-num">S6</span>
       <div class="proj-title">
         <h3>Plasma</h3>
@@ -981,7 +1022,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s7">
-      <div class="proj-thumb shader-thumb" data-thumb="s7"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s7.jpg" width="160" height="90" alt="Void Walker" loading="lazy" decoding="async"></div>
       <span class="proj-num">S7</span>
       <div class="proj-title">
         <h3>Void Walker</h3>
@@ -992,7 +1033,7 @@ footer .mono a:hover { color: var(--acid); }
     </a>
 
     <a class="proj-row reveal" href="#showcase" data-demo="s8">
-      <div class="proj-thumb shader-thumb" data-thumb="s8"><canvas width="160" height="90"></canvas></div>
+      <div class="proj-thumb shader-thumb"><img src="Assets/shader-s8.jpg" width="160" height="90" alt="Orbital Drift" loading="lazy" decoding="async"></div>
       <span class="proj-num">S8</span>
       <div class="proj-title">
         <h3>Orbital Drift</h3>
@@ -1238,6 +1279,33 @@ footer .mono a:hover { color: var(--acid); }
      sphere shader AND the low-res thumbnail/preview wrapper.
      ============================================================ */
 
+  /* Device tier: LOW / MED / HIGH, chosen once before any shader is built
+     (GLSL ES 1.0 needs constant loop bounds). Weak devices default to the
+     most optimized build -- cheaper stage + thumbnail buffers, slower
+     thumbnail refresh, cheaper planet raymarch and reduced per-demo shader
+     detail (raymarch steps + fbm octaves); strong devices get the full-fat
+     build. Force with ?q=low|med|high. */
+  const PERF = (function () {
+    const table = {
+      low:  { label: 'LOW',  stageRes: 0.75, steps: 32, dist: 260, detail: 80,
+              s1Steps: 24, s7Steps: 20, waveSteps: 20, skyOct2: 3, skyOct3: 3 },
+      med:  { label: 'MED',  stageRes: 1,    steps: 48, dist: 350, detail: 110,
+              s1Steps: 32, s7Steps: 26, waveSteps: 26, skyOct2: 4, skyOct3: 4 },
+      high: { label: 'HIGH', stageRes: 1,    steps: 80, dist: 500, detail: 160,
+              s1Steps: 36, s7Steps: 30, waveSteps: 32, skyOct2: 5, skyOct3: 4 }
+    };
+    const forced = (location.search.match(/[?&]q=(\w+)/) || [])[1];
+    const mobile = /Android|iPhone|iPad|iPod|Mobi|Tablet/i.test(navigator.userAgent);
+    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const cores = navigator.hardwareConcurrency || 8;
+    const key = (forced && table[forced])
+      ? forced
+      : (mobile || coarse || cores <= 4) ? 'low' : (cores <= 8 ? 'med' : 'high');
+    return Object.assign({ key, label: table[key].label, mobile, coarse, cores }, table[key]);
+  })();
+  const perfTierEl = document.getElementById('perfTier');
+  if (perfTierEl) perfTierEl.textContent = PERF.label;
+
   const S1_DEEP_FIELD = `
 precision highp float;
 uniform vec2 uRes; uniform float uTime; uniform vec2 uMouse;
@@ -1247,7 +1315,7 @@ float noise3(vec3 x){ vec3 i=floor(x), f=fract(x); f=f*f*(3.0-2.0*f);
                  mix(hash31(i+vec3(0,1,0)),hash31(i+vec3(1,1,0)),f.x),f.y),
             mix(mix(hash31(i+vec3(0,0,1)),hash31(i+vec3(1,0,1)),f.x),
                 mix(hash31(i+vec3(0,1,1)),hash31(i+vec3(1,1,1)),f.x),f.y),f.z); }
-float fbm3(vec3 p){ float v=0.0,a=.5; for(int i=0;i<4;i++){ v+=a*noise3(p); p=p*2.03+vec3(17.7,3.3,9.1); a*=.5; } return v; }
+float fbm3(vec3 p){ float v=0.0,a=.5; for(int i=0;i<${PERF.skyOct3};i++){ v+=a*noise3(p); p=p*2.03+vec3(17.7,3.3,9.1); a*=.5; } return v; }
 float wisp(vec3 p){ float f=fbm3(p); return fbm3(p + f*1.8 + vec3(0.0,uTime*0.015,0.0)); }
 void main(){
   vec2 uv=(gl_FragCoord.xy*2.0-uRes)/uRes.y;
@@ -1269,8 +1337,8 @@ void main(){
     suv*=1.42;
   }
   vec3 col=vec3(0.0);
-  for(int i=0;i<36;i++){
-    float d=float(i)/36.0;
+  for(int i=0;i<${PERF.s1Steps};i++){
+    float d=float(i)/${PERF.s1Steps}.0;
     float tt=1.4+d*d*16.0;
     vec3 pos=ro+rd*tt;
     float dens=clamp((wisp(pos*0.5)-0.45)*2.2, 0.0, 1.0);
@@ -1425,8 +1493,8 @@ float noise3(vec3 x){ vec3 i=floor(x), f=fract(x); f=f*f*(3.0-2.0*f);
                 mix(hash31(i+vec3(0,1,1)),hash31(i+vec3(1,1,1)),f.x),f.y),f.z); }
 float noise2(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.0-2.0*f);
   return mix(mix(hash21(i), hash21(i+vec2(1,0)), u.x), mix(hash21(i+vec2(0,1)), hash21(i+vec2(1,1)), u.x), u.y); }
-float fbm3(vec3 p){ float v=0.0,a=.5; for(int i=0;i<4;i++){ v+=a*noise3(p); p=p*2.03+vec3(17.7,3.3,9.1); a*=.5; } return v; }
-float fbm2(vec2 p){ float v=0.0,a=.5; for(int i=0;i<5;i++){ v+=a*noise2(p); p=p*2.02+vec2(7.7,3.3); a*=.5; } return v; }
+float fbm3(vec3 p){ float v=0.0,a=.5; for(int i=0;i<${PERF.skyOct3};i++){ v+=a*noise3(p); p=p*2.03+vec3(17.7,3.3,9.1); a*=.5; } return v; }
+float fbm2(vec2 p){ float v=0.0,a=.5; for(int i=0;i<${PERF.skyOct2};i++){ v+=a*noise2(p); p=p*2.02+vec2(7.7,3.3); a*=.5; } return v; }
 `;
 
   /* S7 -- VOID WALKER: raymarched nebula + parallax starfield */
@@ -1442,8 +1510,8 @@ vec3 skyCore(vec3 ro, vec3 rd, float t){
     col+=vec3(0.85,0.9,1.0)*step(0.97,h)*pow(max(0.0,1.0-length(fr)*4.0),3.0)*1.2;
     sp*=1.6;
   }
-  for(int i=0;i<30;i++){
-    float d=float(i)/30.0;
+  for(int i=0;i<${PERF.s7Steps};i++){
+    float d=float(i)/${PERF.s7Steps}.0;
     float tt=2.0+d*d*46.0;
     vec3 pos=ro+rd*tt;
     float dens=wisp(pos*0.4, t);
@@ -1459,25 +1527,6 @@ vec3 skyCore(vec3 ro, vec3 rd, float t){
      Perf notes: 3-octave terrain fbm (was 5+5+5), 48 steps (was 60),
      cheaper step growth, normal lighting only near the camera, and a
      softer sun disc -- approx 3-4x cheaper than the original build. */
-  /* Quality tiers for the planet preview -- chosen once before the shader
-     is built (GLSL ES 1.0 needs constant loop bounds). */
-  function detectQuality() {
-    const table = {
-      low: { steps: 32, dist: 260, detail: 80, res: 0.5, label: 'LOW' },
-      med: { steps: 48, dist: 350, detail: 110, res: 0.6, label: 'MED' },
-      high: { steps: 80, dist: 500, detail: 160, res: 0.7, label: 'HIGH' }
-    };
-    const forced = (location.search.match(/[?&]q=(\w+)/) || [])[1];
-    if (forced && table[forced]) return table[forced];
-    const mobile = /Android|iPhone|iPad|iPod|Mobi|Tablet/i.test(navigator.userAgent);
-    const cores = navigator.hardwareConcurrency || 8;
-    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-    if (mobile || coarse || cores <= 4) return table.low;
-    if (cores <= 8) return table.med;
-    return table.high;
-  }
-  const QUALITY = detectQuality();
-
   const PLANET_CORE = SKY_NOISE + `
 float fbm2c(vec2 p){ float v=0.0,a=.5; for(int i=0;i<3;i++){ v+=a*noise2(p); p=p*2.1+vec2(7.7,3.3); a*=.5; } return v; }
 /* Cheap march surface: main relief only (3 octaves), so every march step costs
@@ -1507,11 +1556,11 @@ vec3 skyCore(vec3 ro, vec3 rd, float t){
   vec3 sun=normalize(vec3(0.55,0.45,0.35));
   vec3 col;
   bool hit=false;
-  float tPrev=0.0, tHit=${QUALITY.dist}.0;
+  float tPrev=0.0, tHit=${PERF.dist}.0;
   /* Upward rays from above all terrain skip the march. */
   if(rd.y<0.0 || ro.y<6.8){
-    for(int i=1;i<${QUALITY.steps};i++){
-      float tt=${QUALITY.dist}.0*pow(float(i)/${QUALITY.steps}.0, 1.5);
+    for(int i=1;i<${PERF.steps};i++){
+      float tt=${PERF.dist}.0*pow(float(i)/${PERF.steps}.0, 1.5);
       vec3 pp=ro+rd*tt;
       if(pp.y<terrainM(pp.xz)){ hit=true; tHit=tt; break; }
       tPrev=tt;
@@ -1535,8 +1584,8 @@ vec3 skyCore(vec3 ro, vec3 rd, float t){
     vec3 tc=mix(rockBase, snow, snowMask);
     vec3 n=vec3(0.0,1.0,0.0);
     float rough=0.85;
-    /* Normals + textures only within ${QUALITY.detail} units -- beyond that fog hides it. */
-    if(tt<${QUALITY.detail}.0){
+    /* Normals + textures only within ${PERF.detail} units -- beyond that fog hides it. */
+    if(tt<${PERF.detail}.0){
       float e=1.8;
       n=normalize(vec3(terrain(p.xz+vec2(e,0.0))-terrain(p.xz-vec2(e,0.0)), 2.0*e, terrain(p.xz+vec2(0.0,e))-terrain(p.xz-vec2(0.0,e))));
       float slope=1.0-clamp(n.y,0.0,1.0);
@@ -1636,7 +1685,7 @@ vec3 skyCore(vec3 ro, vec3 rd, float t){
   col=mix(col, mix(vec3(0.45,0.55,0.70), vec3(1.0,1.0,0.99), lit), cloud*0.95);
   float tt=0.3; vec3 q=ro;
   bool hit=false;
-  for(int i=0;i<32;i++){
+  for(int i=0;i<${PERF.waveSteps};i++){
     q=ro+rd*tt;
     if(q.y<=waveH(q.xz,t) || tt>400.0){ if(q.y<=waveH(q.xz,t)) hit=true; break; }
     tt+=0.5+tt*0.12;
@@ -1813,7 +1862,7 @@ void main(){
         stageGL.getUniformLocation(prog, 'uRockR'),
         stageGL.getUniformLocation(prog, 'uGrassR'));
       setShaderParams(stageGL, prog, demo);
-      quadState = { prog, uTime, uRes, uMouse };
+      quadState = { prog, uTime, uRes, uMouse, lastT: 0 };
       if (staticFrame) renderOnce(); else renderLoop(0);
     } catch (e) {
       showError('S' + demo.num[1] + ' -- ' + e.message);
@@ -1829,8 +1878,31 @@ void main(){
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
+  /* Stage render loop with dynamic quality -- three independent cost controls:
+       1) PAUSE when the stage is scrolled off-screen or the tab is hidden,
+       2) DROP the canvas resolution live when measured frame time sits below
+          ~30fps, 3) CLIMB back to full resolution once it holds ~60fps.
+     The tier floor (PERF.stageRes) still sets the low-water mark. */
+  const stageTimes = [];
+  let stageFrames = 0;
+  let stageOnScreen = true;
+  let dynScale = 1;    /* applied resolution multiplier */
+  let dynTarget = 1;   /* desired multiplier from the frame-time controller */
+
   function renderLoop(ts) {
     if (!quadState) return;
+    if (!stageOnScreen || document.hidden) { quadState.raf = 0; return; } /* invisible -> no GPU work */
+    if (quadState.lastT) {
+      const dt = performance.now() - quadState.lastT;
+      if (dt < 500) { stageTimes.push(dt); if (stageTimes.length > 40) stageTimes.shift(); }
+    }
+    quadState.lastT = performance.now();
+    if (++stageFrames % 60 === 0 && stageTimes.length > 10) {
+      const avg = stageTimes.reduce((a, b) => a + b, 0) / stageTimes.length;
+      if (avg > 34 && dynTarget > 0.5) dynTarget = Math.max(0.5, +(dynTarget - 0.1).toFixed(2));
+      else if (avg < 16 && dynTarget < 1) dynTarget = Math.min(1, +(dynTarget + 0.1).toFixed(2));
+      if (dynScale !== dynTarget) { dynScale = dynTarget; resizeStage(); }
+    }
     const gl = stageGL;
     const w = stageCanvas.width, h = stageCanvas.height;
     gl.viewport(0, 0, w, h);
@@ -1928,7 +2000,7 @@ void main(){
     if (!m._white) {
       m._white = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, m._white);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]));
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]));
     }
     return m._white;
   }
@@ -2069,80 +2141,11 @@ void main(){
     else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur - 1); }
   });
 
-  /* ---------- Live thumbnails (throttled, pause offscreen) ---------- */
-  /* Lazy thumbnails -- each demo's WebGL context + shader is only created
-     when its row first scrolls into view, so first load compiles ONE shader
-     (the active demo) instead of nine at once. */
-  const thumbs = [];
-  document.querySelectorAll('.proj-thumb').forEach(t => {
-    const id = t.dataset.thumb;
-    const canvas = t.querySelector('canvas');
-    const demo = DEMOS.find(d => d.id === id);
-    if (!demo) return;
-    const state = { canvas, demo, ready: false, visible: false, done: false, gl: null, prog: null, uTime: null, uRes: null };
-    thumbs.push(state);
-    if (isPreview) { if (initThumb(state)) state.visible = true; }
-    if (reduceMotion) { if (initThumb(state)) { renderThumb(state, 0.6); state.done = true; } }
-  });
-
-  function initThumb(state) {
-    if (state.ready) return true;
-    const gl = getGL(state.canvas);
-    if (!gl) return false;
-    let prog;
-    try { prog = makeProgram(gl, QUAD_VS, state.demo.frag); } catch (e) { return false; }
-    gl.useProgram(prog);
-    const buf = fullscreenQuad(gl);
-    const loc = gl.getAttribLocation(prog, 'aPos');
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    state.gl = gl; state.prog = prog;
-    state.uTime = gl.getUniformLocation(prog, 'uTime');
-    state.uRes = gl.getUniformLocation(prog, 'uRes');
-    state.uHasTex = gl.getUniformLocation(prog, 'uHasTex');
-    state.uRockA = gl.getUniformLocation(prog, 'uRockA');
-    state.uRockN = gl.getUniformLocation(prog, 'uRockN');
-    state.uGrassA = gl.getUniformLocation(prog, 'uGrassA');
-    state.uGrassN = gl.getUniformLocation(prog, 'uGrassN');
-    state.uRockR = gl.getUniformLocation(prog, 'uRockR');
-    state.uGrassR = gl.getUniformLocation(prog, 'uGrassR');
-    bindTerrainTextures(gl, state.uHasTex, state.uRockA, state.uRockN, state.uGrassA, state.uGrassN, state.uRockR, state.uGrassR);
-    setShaderParams(gl, prog, state.demo);
-    state.ready = true;
-    return true;
-  }
-
-  const thumbIO = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      const t = thumbs.find(th => th.canvas === en.target.querySelector('canvas'));
-      if (!t) return;
-      if (en.isIntersecting && !t.ready && !t.done) initThumb(t);
-      t.visible = en.isIntersecting;
-    });
-  }, { threshold: 0.05 });
-  document.querySelectorAll('.proj-thumb').forEach(t => thumbIO.observe(t));
-
-  function renderThumb(state, time) {
-    const gl = state.gl;
-    gl.viewport(0, 0, state.canvas.width, state.canvas.height);
-    gl.uniform1f(state.uTime, time);
-    gl.uniform2f(state.uRes, state.canvas.width, state.canvas.height);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-  }
-
-  let lastThumb = 0;
-  (function thumbLoop(ts) {
-    if (!reduceMotion && ts - lastThumb > 120) {
-      lastThumb = ts;
-      const t = ts * 0.001;
-      thumbs.forEach(s => { if (s.visible && s.ready && !s.done) renderThumb(s, t); });
-    }
-    requestAnimationFrame(thumbLoop);
-  })(0);
+  /* Thumbnails are static snapshots (Assets/shader-sX.jpg) -- no per-thumb
+     WebGL contexts, so the page no longer runs nine shaders at once. */
   /* ---------- Resize handling ---------- */
   function resizeStage() {
-    const dpr = 1;   /* fixed 1x -- keeps the raymarchers fast on all GPUs */
+    const dpr = PERF.stageRes * dynScale;   /* tier floor x live quality scale */
     const w = Math.max(2, Math.round(stageCanvas.clientWidth * dpr));
     const h = Math.max(2, Math.round(stageCanvas.clientHeight * dpr));
     if (stageCanvas.width !== w || stageCanvas.height !== h) {
@@ -2150,6 +2153,17 @@ void main(){
     }
   }
   window.addEventListener('resize', resizeStage);
+  /* Pause/resume the render loop when the stage scrolls out of view or the
+     tab is hidden -- never burn GPU cycles on an invisible canvas. */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      stageOnScreen = entries[0].isIntersecting;
+      if (stageOnScreen && quadState && !quadState.raf) renderLoop(performance.now());
+    }, { threshold: 0.05 }).observe(stageCanvas);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && quadState && !quadState.raf) renderLoop(performance.now());
+  });
 
   /* ---------- Boot ---------- */
   function boot() {
@@ -2160,21 +2174,193 @@ void main(){
     goTo(startIdx >= 0 ? startIdx : 0);
     ensureTerrainImages(function () {
       if (DEMOS[cur] && DEMOS[cur].sky === 'planet') goTo(cur);
-      thumbs.forEach(s => {
-        if (s.ready && s.demo && s.demo.sky === 'planet' && s.uHasTex) {
-          s.gl.useProgram(s.prog);
-          bindTerrainTextures(s.gl, s.uHasTex, s.uRockA, s.uRockN, s.uGrassA, s.uGrassN);
-          renderThumb(s, 0.6);
-        }
-      });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 
   /* ============================================================
-     CONTACT FORM (mailto)
+     SOLAR-CORONA HERO BACKGROUND -- real-eclipse plasma, rendered
+     in WebGL on the #corona canvas. Layered polar-domain noise:
+     long flowing tendrils (large), curling wisps (medium) and a
+     fast fine shimmer, all warping the angular/radial space so the
+     corona boils and flows instead of rotating. Irregular rim +
+     asymmetric sectors + smooth radial falloff + travelling pulses.
+     Colours come from the theme (--signal/--acid), the moon is the
+     darker of ink/paper. Pauses off-screen / hidden; single frame
+     under reduced-motion.
      ============================================================ */
+  (function () {
+    const cvs = document.getElementById('corona');
+    if (!cvs || typeof WebGLRenderingContext === 'undefined') return;
+    let gl = null;
+    try {
+      gl = cvs.getContext('webgl', { antialias: false, alpha: true, depth: false, stencil: false, premultipliedAlpha: true })
+        || cvs.getContext('experimental-webgl', { antialias: false, alpha: true, depth: false, stencil: false, premultipliedAlpha: true });
+    } catch (e) { return; }
+    if (!gl) return;
+
+    const VS = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
+    const FS = `
+precision highp float;
+uniform vec2 uRes; uniform float uTime;
+uniform vec3 uSignal; uniform vec3 uAcid; uniform vec3 uMoon;
+uniform vec2 uCenter; uniform float uMoonR;
+float hash21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float noise2(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x), mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), f.x), f.y); }
+float fbm5(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ v += a * noise2(p); p = p * 2.03 + vec2(17.7, 3.3); a *= 0.5; } return v; }
+float fbm3(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 3; i++){ v += a * noise2(p); p = p * 2.07 + vec2(9.1, 4.7); a *= 0.5; } return v; }
+void main(){
+  vec2 p = gl_FragCoord.xy - uCenter * uRes;
+  float r = length(p);
+  float ang = atan(p.y, p.x);
+  vec2 dir = vec2(cos(ang), sin(ang));   /* continuous across the +-pi wrap */
+  float t = uTime;
+  float mR = uMoonR * uRes.y;
+  if (r < mR) { gl_FragColor = vec4(uMoon, 1.0); return; }
+  float d = r - mR;
+  float rr = log(1.0 + d / mR);
+
+  /* Seamless polar space: the angular dimension is sampled on the unit circle
+     (dir), so the noise fields are periodic in angle with no seam at +-pi. */
+  vec2 warp = vec2(
+    fbm3(vec2(dir.x * 2.5 + rr, dir.y * 2.5) + vec2(0.0, t * 0.12) + vec2(1.7, 3.1)),
+    fbm3(vec2(dir.x * 3.2 + rr, dir.y * 3.2) - vec2(0.0, t * 0.09) + vec2(5.2, 9.1))
+  );
+  float wa = ang + (warp.x - 0.5) * 1.2;      /* warped angle */
+  float wl = rr + (warp.y - 0.5) * 0.6;        /* warped radius */
+  vec2 wd = vec2(cos(wa), sin(wa));            /* seamless warped direction */
+
+  float big  = fbm5(vec2(wd.x * 3.2, wd.y * 3.2 + wl * 3.0) + vec2(t * 0.12, t * 0.05));
+  float med  = fbm5(vec2(wd.x * 5.5 - t * 0.4, wd.y * 5.5 + wl * 4.5 + t * 0.12) + vec2(4.1, 1.2));
+  float fine = noise2(vec2(wd.x * 9.0 + t * 2.2, wd.y * 9.0 + wl * 7.0 - t * 1.2) + vec2(8.3, 2.8));
+  float I = smoothstep(0.28, 0.72, big) * 1.2 + smoothstep(0.42, 0.95, med) * 0.85 + fine * 0.42;
+  float rimMask = 0.5 + 0.5 * fbm3(vec2(dir.x * 3.0, dir.y * 3.0) + vec2(t * 0.8, 3.7));
+  float inner = exp(-(d / mR) * 3.2) * (0.45 + 0.55 * rimMask) * 1.5;
+  float fall = exp(-(d / mR) * 1.0);
+  float pulse = 0.7 + 0.3 * sin(warp.x * 18.0 - t * 2.0 + rr * 10.0);
+  float asym = 0.3 + 0.9 * fbm3(vec2(dir.x * 2.0, dir.y * 2.0) + vec2(t * 0.08, 1.7));
+  float C = clamp((I + inner) * fall * pulse * asym, 0.0, 1.9);
+  float alpha = clamp(C, 0.0, 1.0);
+  float heat = clamp(1.0 - (d / mR) * 0.6 - (1.0 - big) * 0.3, 0.0, 1.0);
+  vec3 col = mix(uAcid, uSignal, heat);
+  col += uSignal * fine * 0.3;
+  col *= 0.75 + 1.5 * clamp(C, 0.0, 1.0);
+  gl_FragColor = vec4(col * alpha, alpha);
+}`;
+    const sh = (type, src) => { const x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x)); return x; };
+    let prog;
+    try {
+      prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+      gl.linkProgram(prog);
+    } catch (e) { return; }
+    document.documentElement.classList.add('corona-live');
+    gl.useProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'aPos');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = {
+      res: gl.getUniformLocation(prog, 'uRes'),
+      time: gl.getUniformLocation(prog, 'uTime'),
+      signal: gl.getUniformLocation(prog, 'uSignal'),
+      acid: gl.getUniformLocation(prog, 'uAcid'),
+      moon: gl.getUniformLocation(prog, 'uMoon'),
+      center: gl.getUniformLocation(prog, 'uCenter'),
+      moonR: gl.getUniformLocation(prog, 'uMoonR')
+    };
+
+    function hexToRgb(h) {
+      h = String(h || '#000').trim().replace('#', '');
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      const n = parseInt(h, 16);
+      return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
+    }
+    function lum(c) { return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+    function themeColors() {
+      const cs = getComputedStyle(document.documentElement);
+      const sig = hexToRgb(cs.getPropertyValue('--signal'));
+      const acid = hexToRgb(cs.getPropertyValue('--acid'));
+      const ink = hexToRgb(cs.getPropertyValue('--ink'));
+      const paper = hexToRgb(cs.getPropertyValue('--paper'));
+      return { sig, acid, moon: lum(ink) < lum(paper) ? ink : paper };
+    }
+    let colors = themeColors();
+    try {
+      new MutationObserver(() => { colors = themeColors(); })
+        .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    } catch (e) {}
+
+    /* device-tier tuning for the soft background: buffer scale + render rate */
+    const CORONA_TIER = {
+      low:  { res: 0.45, rate: 40 },
+      med:  { res: 0.60, rate: 33 },
+      high: { res: 0.75, rate: 26 }
+    };
+    const cTier = CORONA_TIER[PERF.key] || CORONA_TIER.med;
+    const scale = cTier.res;
+    let W = 2, H = 2;
+    function resize() {
+      W = Math.max(2, Math.round(cvs.clientWidth * scale));
+      H = Math.max(2, Math.round(cvs.clientHeight * scale));
+      if (cvs.width !== W || cvs.height !== H) { cvs.width = W; cvs.height = H; }
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    if ('ResizeObserver' in window) {
+      /* hero reflows as fonts load -- keep the moon glued to uCenter */
+      new ResizeObserver(resize).observe(cvs);
+    }
+
+    function centerUV() {
+      const w = window.innerWidth;
+      const x = w < 640 ? 0.71 : (w < 1100 ? 0.68 : 0.66);
+      /* vertical: pin the moon's centre to the "& GLSL BUILDER" baseline so a
+         squashed window never drops the dark disc over the hero headings */
+      let y = 0.42;
+      const bld = document.querySelector('.k-row .k-line');
+      const hero = document.querySelector('.hero');
+      if (bld && hero) {
+        const hr = hero.getBoundingClientRect();
+        const br = bld.getBoundingClientRect();
+        if (hr.height > 0) y = (br.bottom - hr.top) / hr.height;
+        y = Math.max(0.18, Math.min(0.85, y));
+      }
+      return [x, y];
+    }
+
+    let onScreen = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.02 }).observe(cvs);
+    }
+    function draw(time) {
+      const c = centerUV();
+      gl.viewport(0, 0, W, H);
+      gl.uniform2f(U.res, W, H);
+      gl.uniform1f(U.time, time);
+      gl.uniform3fv(U.signal, colors.sig);
+      gl.uniform3fv(U.acid, colors.acid);
+      gl.uniform3fv(U.moon, colors.moon);
+      gl.uniform2f(U.center, c[0], c[1]);
+      gl.uniform1f(U.moonR, 0.105);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { draw(0.6); return; }
+
+    let last = performance.now();
+    (function loop(now) {
+      requestAnimationFrame(loop);
+      if (!onScreen || document.hidden) return;
+      if (now - last > cTier.rate) { last = now; draw(now * 0.001); }
+    })(last);
+  })();
+
   const form = $('contactForm');
   const status = $('formStatus');
   form.addEventListener('submit', e => {

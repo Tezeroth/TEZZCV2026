@@ -380,11 +380,13 @@ html.gimbal-ready #gimbal-link { left: 0; top: 0; transform: none; }
   border: 2px solid #fff;
 }
 .warn-proceed {
-  background: repeating-linear-gradient(45deg, #ffd500 0 14px, #000 14px 28px);
-  color: #000;
+  background: repeating-linear-gradient(45deg, #1c0306 0 14px, #000 14px 28px);
+  color: #ff2e2e;
+  border-color: #ff2e2e;
+  text-shadow: 0 0 8px rgba(255, 46, 46, 0.9);
   animation: warn-blink 1.15s steps(2) infinite;
 }
-.warn-proceed:hover { animation: none; background: #ffe14d; }
+.warn-proceed:hover { animation: none; background: #3a070d; color: #ff6b6b; }
 .warn-back { background: #101318; color: #9aa7c4; border-color: #3a4a72; }
 .warn-back:hover { color: #fff; border-color: #9aa7c4; background: #161b26; }
 .warn-card::after {
